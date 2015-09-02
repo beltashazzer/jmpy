@@ -12,7 +12,6 @@ def histogram(x,
               data: pd.DataFrame=None,
               legend=None,
               figsize: tuple=(9, 6),
-              filter_pct: int=0,
               xscale: str='linear',
               yscale: str='linear',
               cmap: str='default',
@@ -28,7 +27,6 @@ def histogram(x,
     :param data: is x is a str, this is a pd.Dataframe
     :param legend: str or ndarray,
     :param figsize: default is 9,6; sets the figure size
-    :param filter_pct: int, filter outlier data fro
     :param xscale: default is linear, set the scale type [linear, log, symlog]
     :param yscale: default is linear, set the scale type [linear, log, symlog]
     :param cmap: colormap to use for plotting
@@ -42,7 +40,6 @@ def histogram(x,
     :return:
     """
 
-
     # if no dataframe is supplied, create one
     if data is None:
         x, _, legend, data = components.create_df(x, None, legend)
@@ -52,8 +49,6 @@ def histogram(x,
     local_data[x] = local_data[x].astype('float').dropna()
 
     min_, max_ = np.min(local_data[x]), np.max(local_data[x])
-    if filter_pct > 0:
-        min_, max_ = np.percentile(local_data[x], filter_pct), np.percentile(local_data[x], 100 - filter_pct)
 
     binlist = np.linspace(min_, max_, bins)
 
@@ -79,6 +74,7 @@ def histogram(x,
             legend_color[key] = cgrid[i]
 
         axl = components.legend(sorted(list(legend_color.items())), axl)
+        axl.set_title(legend, loc='left')
 
         for group in set(local_data[legend]):
             axm.hist(np.asarray(local_data[local_data[legend] == group][x]),
@@ -104,16 +100,16 @@ def histogram(x,
     axm.set_xlim(min_, max_)
     axm.set_xscale(xscale)
     axm.set_yscale(yscale)
-    axm.set_xlabel(x)    
-    
+    axm.set_xlabel(x)
+
     for label in axm.get_xticklabels():
         label.set_rotation(90)
-    
+
     if cumprob:
         axc.set_xlim(min_, max_)
         axc.set_xscale(xscale)
         axc.set_yticklabels([], visible=False)
         for label in axc.get_xticklabels():
             label.set_rotation(90)
-    
+
     return canvas.figure

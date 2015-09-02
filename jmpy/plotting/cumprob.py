@@ -12,7 +12,6 @@ def cumprob(x,
             data: pd.DataFrame=None,
             legend=None,
             figsize: tuple=(9, 6),
-            filter_pct: int=0,
             xscale: str='linear',
             yscale: str='linear',
             cmap: str='default',
@@ -26,7 +25,6 @@ def cumprob(x,
     :param data: is x is a str, this is a pd.Dataframe
     :param legend: str or ndarray,
     :param figsize: default is 9,6; sets the figure size
-    :param filter_pct: int, filter outlier data fro
     :param xscale: default is linear, set the scale type [linear, log, symlog]
     :param yscale: default is linear, set the scale type [linear, log, symlog]
     :param cmap: colormap to use for plotting
@@ -47,8 +45,6 @@ def cumprob(x,
     local_data[x] = local_data[x].astype('float').dropna()
 
     min_, max_ = np.min(local_data[x]), np.max(local_data[x])
-    if filter_pct > 0:
-        min_, max_ = np.percentile(local_data[x], filter_pct), np.percentile(local_data[x], 100 - filter_pct)
 
     if fig:
         fig = fig
@@ -72,6 +68,7 @@ def cumprob(x,
             legend_color[key] = cgrid[i]
 
         axl = components.legend(sorted(list(legend_color.items())), axl)
+        axl.set_title(legend,loc='left')
 
         for group in set(local_data[legend]):
             axm = components.cumprob(local_data[local_data[legend] == group][x],
@@ -89,5 +86,5 @@ def cumprob(x,
     axm.set_xscale(xscale)
     axm.set_yscale(yscale)
     axm.set_xlabel(x)
-    
+
     return canvas.figure

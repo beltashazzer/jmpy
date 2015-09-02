@@ -19,7 +19,6 @@ def boxplot(x,
             points: bool=True,
             cumprob: bool=False,
             yscale: str='linear',
-            filter_pct: int=0,
             cmap: str='default',
             figsize: tuple=(9, 6),
             orderby=None,
@@ -37,7 +36,6 @@ def boxplot(x,
     :param points: bool, display or not display points
     :param cumprob: bool, display cumprob plot?
     :param yscale: str, default = linear, can be log or symlog too
-    :param filter_pct: int, points to filter by for scaling
     :param cmap: str, matplotlib colormap
     :param figsize: tuple(int,int), figure size
     :param orderby: str, order x axis by this param
@@ -74,9 +72,6 @@ def boxplot(x,
             order.append(idx)
 
     min_, max_ = np.min(local_data[y]), np.max(local_data[y])
-    if filter_pct > 0:
-        min_, max_ = np.percentile(local_data[y], filter_pct),\
-                     np.percentile(local_data[y], 100 - filter_pct)
 
     if fig:
         fig = fig
@@ -91,7 +86,7 @@ def boxplot(x,
         local_data.boxplot(column=y, by=x, ax=axm, showfliers=False, positions=order, fontsize=8, **kwargs)
     else:
         local_data.boxplot(column=y, by=x, ax=axm, showfliers=False, fontsize=8, **kwargs)
-    
+
     # We need to identify all of the unique entries in the groupby column
     unique_groups = set(local_data[x])
     nonan_grps = []
@@ -108,6 +103,7 @@ def boxplot(x,
         for i, key in local_data[legend].iteritems():
             legend_color[key] = cgrid[i]
         axl = components.legend(sorted(list(legend_color.items())), axl)
+        axl.set_title(legend, loc='left')
 
     # add all the point level data
     groups = sorted(nonan_grps)
@@ -140,16 +136,16 @@ def boxplot(x,
     axm.set_ylabel(y)
     for label in axm.get_xticklabels():
         label.set_rotation(90)
-    
+
     if cumprob:
         axc.set_ylim(min_, max_)
         axc.set_yscale(yscale)
         axc.set_yticklabels([], visible=False)
-        
+
     if table:
         axt = components.datatable(y, data, axt, by=x)
 
     axm.set_title('')
     fig.suptitle('')
-    
+
     return canvas.figure

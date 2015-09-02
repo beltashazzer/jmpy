@@ -8,6 +8,7 @@ import matplotlib.backends.backend_agg as mbb
 from jmpy import common
 from jmpy.plotting import components
 
+
 def scatter(x,
             y,
             data: pd.DataFrame=None,
@@ -34,11 +35,11 @@ def scatter(x,
     :param xscale: default == linear, any of matplotlib scale types
     :param yscale: default == linear, any of matplotlib scale types
     :param cmap: any of matplotlib cmaps
-    :param figsize: default == (9,6); 
+    :param figsize: default == (9,6);
     :param fit: [linear, quadratic, smooth, interpolate]
     :param fitparams: params to pass to fitting function
     :param table:  show the regression table
-    :param kwargs: 
+    :param kwargs:
     :return: fig, (axes)
     """
 
@@ -50,6 +51,8 @@ def scatter(x,
         fitparams = {}
 
     local_data = data.copy()
+    local_data = local_data[[i for i in (x, y, legend) if i]]
+    local_data = local_data.dropna()
     local_data.sort(x)
     local_data = local_data.reset_index()
 
@@ -76,6 +79,7 @@ def scatter(x,
             legend_color[key] = cgrid[i]
 
         components.legend(sorted(list(legend_color.items())), axl)
+        axl.set_title(legend,loc='left')
 
         text = ''
         for l in sorted(set(local_data[legend])):
@@ -110,7 +114,7 @@ def scatter(x,
     axm.set_ylabel(y)
 
     return canvas.figure
-    
+
 
 def _get_fit(x, y, df, fit, fitparams):
     """
@@ -123,41 +127,44 @@ def _get_fit(x, y, df, fit, fitparams):
     :return: subsample of data and predicted line
     """
 
-    xs = df[x]
-    ys = df[y]
-    xhat = np.linspace(xs.min(), xs.max(), num=100)
+    xhat = np.linspace(df[x].min(), df[x].max(), num=100)
 
     if fit == 'linear':
+        xs, ys = _medianify(df, x, y)
         mb = np.polyfit(xs, ys, 1, **fitparams)
         fit_fn = np.poly1d(mb)
         # TODO: make this handle precision correctly
         eq = 'f(x) = {:.4f}x + {:.4f}'.format(fit_fn.coeffs[0], fit_fn.coeffs[1])
-
         return xhat, fit_fn(xhat), eq
 
     elif fit == 'quadratic':
+        xs, ys = _medianify(df, x, y)
         mb = np.polyfit(xs, ys, 2, **fitparams)
         fit_fn = np.poly1d(mb)
         # TODO: make this handle precision correctly...
         eq = 'f(x) = {:.4f}x^2 + {:.4f}x + {:.4f}'.format(fit_fn.coeffs[0], fit_fn.coeffs[1], fit_fn.coeffs[2])
-
         return xhat, fit_fn(xhat), eq
 
     elif fit == 'smooth':
+        xs, ys = _medianify(df, x, y)
+        xhat = np.linspace(xs.min(), xs.max(), num=100)
+        spl = spi.UnivariateSpline(xs, ys, **fitparams)
+        return xhat, spl(xhat), None
+
+    elif fit == 'interpolate':
+        xs, ys = _medianify(df, x, y)
+        f = spi.interp1d(xs, ys, **fitparams)
+        return xhat, f(xhat), None
+
+
+def _medianify(df, x, y):
         t = df[[x, y]]
-        # univariate spline chokes if there are multiple values per "x" so 
+        # univariate spline chokes if there are multiple values per "x" so
         # we will take the median of all the doubled up x values.
         summ = t.groupby(x).agg(np.median)
         summ = summ.unstack()
         summ = summ.reset_index()
         summ = summ.sort(x)
 
-        xs = summ[x]
-        ys = summ[0]
-        xhat = np.linspace(xs.min(), xs.max(), num=100)
-        spl = spi.UnivariateSpline(xs, ys, **fitparams)
-        return xhat, spl(xhat), None
+        return summ[x], summ[0]
 
-    elif fit == 'interpolate':
-        f = spi.interp1d(xs, ys, **fitparams)
-        return xhat, f(xhat), None

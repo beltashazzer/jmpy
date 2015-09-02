@@ -25,18 +25,19 @@ def regressiontable(text, ax, fig):
     Creates the table for the scatter plot.
     Pass in text and you get a axis back.
     """
-    ax.text(0, .3, '{}'.format(text),
+    ax.text(0, 1, '{}'.format(text),
             horizontalalignment='left',
             verticalalignment='top',
             family='Courier New',
             fontsize=12,
-            transform=fig.transFigure)
+            transform=ax.transAxes
+            )
 
     ax.set_axis_bgcolor('white')
     ax.grid(b=False)
     ax.set_xticklabels([])
     ax.set_yticklabels([])
-    ax.set_ylim([0,1])
+    ax.set_ylim([0, 1])
     ax.tick_params(top="off")
     ax.tick_params(bottom="off")
     ax.tick_params(right="off")
@@ -62,9 +63,10 @@ def datatable(x, data, ax, by=None):
         values.append(array)
 
     tab = ax.table(cellText=values,
-              rowLabels=groups,
-              colLabels=headers,
-              loc='center left')
+                   rowLabels=groups,
+                   colLabels=headers,
+                   loc='upper left',
+                   transform = ax.transAxes)
 
     tab.set_fontsize(8)
     ax.set_axis_bgcolor('white')
@@ -83,7 +85,7 @@ def legend(labelcolor, axl):
     for label, color in labelcolor:
         axl.scatter(1, 1, c=color, label=label)
         axl.set_ylim(0, .1)
-        axl.legend(bbox_to_anchor=(0, 1), loc=2, borderaxespad=0, scatterpoints=1, frameon=False )
+        axl.legend(bbox_to_anchor=(0, 1), loc=2, borderaxespad=0, scatterpoints=1, frameon=False)
         axl.axis('off')
     return axl
 
@@ -92,37 +94,38 @@ def create_axes(cumprob, legend, dt, fig):
     """
     Private method to create all the axes
     """
-    
+
     mpl.rcParams.update({'axes.labelsize': 'small'})
     mpl.rcParams.update({'xtick.labelsize': 'small'})
     mpl.rcParams.update({'ytick.labelsize': 'small'})
     mpl.rcParams.update({'legend.fontsize': 'small'})
+    mpl.rcParams.update({'axes.titlesize': 'small'})
     mpl.rcParams.update({'font.size': 10.0})
 
-    xmargin = 0.1 # per side
-    xmmargin = 0.05 if (legend and cumprob) else 0 # margin between two axes in x
-    
-    ymargin = 0.05 if dt else 0.1 # top only
-    ymmargin = 0.1 if dt else 0 # margin between two axes in y direction    
-    
+    xmargin = 0.1  # per side
+    xmmargin = 0.05 if (legend and cumprob) else 0  # margin between two axes in x
+
+    ymargin = 0.05 if dt else 0.1  # top only
+    ymmargin = 0.05 if dt else 0  # margin between two axes in y direction
+
     axc_w = .2 if cumprob else 0
     axl_w = .05 if legend else 0
     axm_w = 1 - (2*xmargin) - axc_w - axl_w - xmmargin
     axt_w = 1 - (2 * xmargin)
-    
+
     axt_h = (1 - (2*ymargin) - ymmargin) / 2 if dt else 0
     axm_h, axc_h, axl_h = ((1 - (2*ymargin) - ymmargin) - axt_h, ) * 3
 
-    axm = fig.add_axes([xmargin, 1-axm_h-ymargin, axm_w, axm_h], label='axm') # x, y, width, height
+    axm = fig.add_axes([xmargin, 1-axm_h-ymargin, axm_w, axm_h], label='axm')  # x, y, width, height
     axc, axl, axt = None, None, None
-    
+
     if cumprob:
         axc = fig.add_axes([xmargin + axm_w + xmmargin, 1-axm_h-ymargin, axc_w, axc_h], label='axc')
 
     if legend and cumprob:
-       axl = fig.add_axes([xmargin + axm_w + xmmargin + axc_w, 1-axm_h-ymargin, axl_w, axl_h], frameon=False, label='axl')
+        axl = fig.add_axes([xmargin + axm_w + xmmargin + axc_w, 1-axm_h-ymargin, axl_w, axl_h], frameon=False, label='axl')
     elif legend:
-        axl = fig.add_axes([xmargin + axm_w , 1-axm_h-ymargin, axl_w, axl_h], frameon=False, label='axl')
+        axl = fig.add_axes([xmargin + axm_w, 1-axm_h-ymargin, axl_w, axl_h], frameon=False, label='axl')
 
     if dt:
         axt = fig.add_axes([xmargin, 0, axt_w, axt_h], frameon=False, label='axt')
@@ -130,22 +133,23 @@ def create_axes(cumprob, legend, dt, fig):
     for ax in axm, axc, axl, axt:
         if not ax:
             continue
-        
+
         ax.tick_params(top="off")
         ax.tick_params(bottom="off")
         ax.tick_params(right="off")
         ax.tick_params(left="off")
 
     return (axm, axc, axl, axt)
-    
+
+
 def get_axes(fig, clear=True):
     """
     Private method to get all the axes from a figure, but put in the correct order
     """
-    
+
     axes = fig.axes
     axm, axc, axl, axt = (None,) * 4
-    
+
     for ax in axes:
         if ax.get_label() == 'axm':
             axm = ax
@@ -155,20 +159,25 @@ def get_axes(fig, clear=True):
             axl = ax
         elif ax.get_label() == 'axt':
             axt = ax
-        
+
         if clear:
             ax.cla()
-        
+
     return axm, axc, axl, axt
-    
-def create_df(x, y, legend=None):
+
+
+def create_df(x, y, legend=None, z=None,):
     """
     create a generic dataframe from supplie numpy arrays
     """
-    
+
     mydict = {}
     mydict['x'] = x
     mydict['y'] = y
+
+    if z is not None:
+        mydict['z'] = z
+
     if legend is not None:
         mydict['legend'] = legend
         legend = 'legend'
@@ -176,6 +185,9 @@ def create_df(x, y, legend=None):
     data = pd.DataFrame.from_dict(mydict)
     x = 'x'
     y = 'y'
-    
+
+    if z is not None:
+        z = 'z'
+        return x, y, z, data
+
     return x, y, legend, data
-    
