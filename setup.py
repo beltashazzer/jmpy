@@ -5,7 +5,7 @@ setup(name='jmpy',
       description='JMP Style Plotting and Modeling',
       url='',
       author='David Daycock',
-      author_email='ddaycock@micron.com',
+      author_email='daycock@gmail.com',
       license='MIT',
       packages=[
         'jmpy',
