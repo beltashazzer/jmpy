@@ -11,7 +11,7 @@ from jmpy.plotting import components
 def histogram(x,
               data: pd.DataFrame=None,
               legend=None,
-              figsize: tuple=(9, 6),
+              figsize: tuple=(12, 6),
               xscale: str='linear',
               yscale: str='linear',
               cmap: str='default',

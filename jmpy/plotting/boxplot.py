@@ -20,7 +20,7 @@ def boxplot(x,
             cumprob: bool=False,
             yscale: str='linear',
             cmap: str='default',
-            figsize: tuple=(9, 6),
+            figsize: tuple=(12, 6),
             orderby=None,
             table: bool=True,
             fig=None,
@@ -142,6 +142,9 @@ def boxplot(x,
         axc.set_yscale(yscale)
         axc.set_yticklabels([], visible=False)
 
+        for label in axc.get_xticklabels():
+            label.set_rotation(90)
+
     if table:
         axt = components.datatable(y, data, axt, by=x)
 
@@ -149,3 +152,34 @@ def boxplot(x,
     fig.suptitle('')
 
     return canvas.figure
+
+if __name__ == "__main__":
+    nsamples = 250
+    xc = np.linspace(0, 100, nsamples)
+    xc2 = xc**2
+    xd = np.random.choice([1, 3, 5, 7], nsamples)
+    xe = np.random.choice([10, 30, 50], nsamples)
+    xf = np.random.choice([.1, .4], nsamples)
+    xz = np.random.choice([np.nan], nsamples)
+    xg = np.random.normal(size=nsamples)*15
+
+    X = np.column_stack((xc, xc2, xd, xe))
+    beta = np.array([1, .01, 17, .001])
+
+    e = np.random.normal(size=nsamples)*10
+    ytrue = np.dot(X, beta)
+    y = ytrue + e
+
+    data = {}
+    data['xc'] = xc
+    data['xc2'] = xc2
+    data['xd'] = xd
+    data['xe'] = xe
+    data['xf'] = xf
+    data['xg'] = xg
+    data['y'] = y
+    data['ytrue'] = ytrue
+
+    df = pd.DataFrame.from_dict(data)
+
+    fig = boxplot(x='xd', y='y', data=df, legend='xd', cumprob=True)

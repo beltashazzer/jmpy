@@ -86,56 +86,56 @@ df.head()
       <th>0</th>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>7</td>
+      <td>3</td>
       <td>50</td>
       <td>0.4</td>
-      <td>7.628784</td>
-      <td>114.007255</td>
-      <td>119.050000</td>
+      <td>13.390127</td>
+      <td>38.537383</td>
+      <td>51.050000</td>
     </tr>
     <tr>
       <th>1</th>
       <td>0.401606</td>
       <td>0.161288</td>
-      <td>3</td>
+      <td>1</td>
       <td>10</td>
-      <td>0.4</td>
-      <td>16.637129</td>
-      <td>52.239746</td>
-      <td>51.413219</td>
+      <td>0.1</td>
+      <td>38.944329</td>
+      <td>4.026117</td>
+      <td>17.413219</td>
     </tr>
     <tr>
       <th>2</th>
       <td>0.803213</td>
       <td>0.645151</td>
-      <td>5</td>
+      <td>1</td>
       <td>50</td>
-      <td>0.1</td>
-      <td>-14.003879</td>
-      <td>59.695922</td>
-      <td>85.859664</td>
+      <td>0.4</td>
+      <td>-7.227282</td>
+      <td>36.135362</td>
+      <td>17.859664</td>
     </tr>
     <tr>
       <th>3</th>
       <td>1.204819</td>
       <td>1.451589</td>
-      <td>3</td>
-      <td>50</td>
-      <td>0.4</td>
-      <td>-2.778978</td>
-      <td>42.663512</td>
-      <td>52.269335</td>
+      <td>7</td>
+      <td>30</td>
+      <td>0.1</td>
+      <td>13.180921</td>
+      <td>121.067183</td>
+      <td>120.249335</td>
     </tr>
     <tr>
       <th>4</th>
       <td>1.606426</td>
       <td>2.580604</td>
-      <td>5</td>
-      <td>10</td>
+      <td>1</td>
+      <td>30</td>
       <td>0.4</td>
-      <td>17.615734</td>
-      <td>95.051037</td>
-      <td>86.642232</td>
+      <td>6.480724</td>
+      <td>14.221960</td>
+      <td>18.662232</td>
     </tr>
   </tbody>
 </table>
@@ -266,20 +266,6 @@ jp.scatter(x='xc2', y='y', data=df, legend='xd', fit='smooth', fitparams={'s': 1
 
 
 
-Contour plots can also be created as well:
-
-
-```python
-jp.contour('xc2', 'xc', 'y', df, cmap='YlGnBu')
-```
-
-
-
-
-![png](README_files/README_20_0.png)
-
-
-
 ___
 ### Modeling  
 #### Ordinary Least Squares
@@ -296,7 +282,7 @@ jm.fit(model, data=df, sample_rate=.8, model_type='ols');
 ```
 
 
-![png](README_files/README_22_0.png)
+![png](README_files/README_20_0.png)
 
 
 ___
@@ -321,7 +307,7 @@ jm.fit(model, data=dfo, sample_rate=.8, model_type='ols');
 ```
 
 
-![png](README_files/README_26_0.png)
+![png](README_files/README_24_0.png)
 
 
 Employing the robust linear model, we can minimize the influence of the outliers, and get better coefficient predictions.
@@ -333,7 +319,7 @@ jm.fit(model, data=dfo, sample_rate=.8, model_type='rlm');
 ```
 
 
-![png](README_files/README_28_0.png)
+![png](README_files/README_26_0.png)
 
 
 Our parameter estimates using the robust linear model are much closer to the truth, than using the OLS.
@@ -348,8 +334,13 @@ jm.check_estimates(model, data=df, sample_rate=.8, model_type='ols', iterations=
 ```
 
 
-![png](README_files/README_31_0.png)
+![png](README_files/README_29_0.png)
 
+
+
+```python
+
+```
 
 
 ```python

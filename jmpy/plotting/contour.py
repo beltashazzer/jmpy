@@ -20,7 +20,7 @@ def contour(x,
             gridsize: int=100,
             colorbar: bool=True,
             labels: bool=False,
-            figsize: tuple=(9, 6),
+            figsize: tuple=(12, 6),
             filled: bool=True,
             fig=None,
             **kwargs):

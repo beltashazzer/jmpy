@@ -1,7 +1,7 @@
 from jmpy import common
 import pandas as pd
 import matplotlib as mpl
-
+import matplotlib.gridspec as gs
 
 def cumprob(x, ax, color=None, marker='.', alpha=1, swapxy=False):
     """
@@ -85,7 +85,8 @@ def legend(labelcolor, axl):
     for label, color in labelcolor:
         axl.scatter(1, 1, c=color, label=label)
         axl.set_ylim(0, .1)
-        axl.legend(bbox_to_anchor=(0, 1), loc=2, borderaxespad=0, scatterpoints=1, frameon=False)
+        axl.legend(bbox_to_anchor=(0, 1), loc=2, borderaxespad=0,
+                   scatterpoints=1, frameon=False)
         axl.axis('off')
     return axl
 
@@ -95,40 +96,51 @@ def create_axes(cumprob, legend, dt, fig):
     Private method to create all the axes
     """
 
-    mpl.rcParams.update({'axes.labelsize': 'small'})
-    mpl.rcParams.update({'xtick.labelsize': 'small'})
-    mpl.rcParams.update({'ytick.labelsize': 'small'})
-    mpl.rcParams.update({'legend.fontsize': 'small'})
-    mpl.rcParams.update({'axes.titlesize': 'small'})
-    mpl.rcParams.update({'font.size': 10.0})
+    rows = 1
+    cols = 1
+    main_width = 15
+    cumprob_w = 5
+    legend_w = 1
 
-    xmargin = 0.1  # per side
-    xmmargin = 0.05 if (legend and cumprob) else 0  # margin between two axes in x
+    width_array = [main_width]
+    height_array = [1]
 
-    ymargin = 0.05 if dt else 0.1  # top only
-    ymmargin = 0.05 if dt else 0  # margin between two axes in y direction
+    if cumprob and legend:
+        cols = 3
+        width_array = [main_width, cumprob_w, legend_w]
+    elif cumprob:
+        cols = 2
+        width_array = [main_width, cumprob_w]
+    elif legend:
+        cols = 2
+        width_array = [main_width, legend_w]
 
-    axc_w = .2 if cumprob else 0
-    axl_w = .05 if legend else 0
-    axm_w = 1 - (2*xmargin) - axc_w - axl_w - xmmargin
-    axt_w = 1 - (2 * xmargin)
+    dt_start = len(width_array)
+    dt_end = dt_start + len(width_array)
 
-    axt_h = (1 - (2*ymargin) - ymmargin) / 2 if dt else 0
-    axm_h, axc_h, axl_h = ((1 - (2*ymargin) - ymmargin) - axt_h, ) * 3
+    if dt:
+        rows = 2
+        width_array = width_array + width_array
+        height_array = [2, 1]
 
-    axm = fig.add_axes([xmargin, 1-axm_h-ymargin, axm_w, axm_h], label='axm')  # x, y, width, height
+    grid = gs.GridSpec(rows, cols,
+                       width_ratios=width_array,
+                       height_ratios=height_array)
+
+    axm = fig.add_subplot(grid[0], label='axm')  # x, y, width, height
     axc, axl, axt = None, None, None
 
     if cumprob:
-        axc = fig.add_axes([xmargin + axm_w + xmmargin, 1-axm_h-ymargin, axc_w, axc_h], label='axc')
+        axc = fig.add_subplot(grid[1], label='axc')
 
     if legend and cumprob:
-        axl = fig.add_axes([xmargin + axm_w + xmmargin + axc_w, 1-axm_h-ymargin, axl_w, axl_h], frameon=False, label='axl')
+        axl = fig.add_subplot(grid[2], frameon=False, label='axl', )
     elif legend:
-        axl = fig.add_axes([xmargin + axm_w, 1-axm_h-ymargin, axl_w, axl_h], frameon=False, label='axl')
+        axl = fig.add_subplot(grid[1], frameon=False, label='axl')
 
     if dt:
-        axt = fig.add_axes([xmargin, 0, axt_w, axt_h], frameon=False, label='axt')
+        axt = fig.add_subplot(grid[dt_start:dt_end], frameon=False,
+                              label='axt')
 
     for ax in axm, axc, axl, axt:
         if not ax:
@@ -139,12 +151,14 @@ def create_axes(cumprob, legend, dt, fig):
         ax.tick_params(right="off")
         ax.tick_params(left="off")
 
+    fig.set_tight_layout({'w_pad': -2})
     return (axm, axc, axl, axt)
 
 
 def get_axes(fig, clear=True):
     """
-    Private method to get all the axes from a figure, but put in the correct order
+    Private method to get all the axes from a figure,
+    but put in the correct order
     """
 
     axes = fig.axes

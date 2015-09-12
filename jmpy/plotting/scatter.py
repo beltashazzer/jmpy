@@ -18,7 +18,7 @@ def scatter(x,
             xscale: str='linear',
             yscale: str='linear',
             cmap: str='default',
-            figsize: tuple=(9, 6),
+            figsize: tuple=(12, 6),
             fit: str=None,
             fitparams: dict=None,
             table: bool=True,
@@ -72,19 +72,21 @@ def scatter(x,
     if legend:
         # colormap is supposed to be the goto function to get all colormaps
         # should return a colorgrid that maps each point to a set of colors
-        cgrid = common.colors.colormap(local_data[legend], kind='discrete', cmap=cmap)
+        cgrid = common.colors.colormap(local_data[legend],
+                                       kind='discrete', cmap=cmap)
 
         legend_color = {}
         for i, key in local_data[legend].iteritems():
             legend_color[key] = cgrid[i]
 
         components.legend(sorted(list(legend_color.items())), axl)
-        axl.set_title(legend,loc='left')
+        axl.set_title(legend, loc='left')
 
         text = ''
         for l in sorted(set(local_data[legend])):
             t = local_data[local_data[legend] == l]
-            axm.scatter(x=t[x], y=t[y], c=legend_color[l], marker=marker, alpha=alpha, **kwargs)
+            axm.scatter(x=t[x], y=t[y], c=legend_color[l],
+                        marker=marker, alpha=alpha, **kwargs)
 
             if fit:
                 xs, ys, fn = _get_fit(x, y, t, fit, fitparams)
@@ -98,7 +100,8 @@ def scatter(x,
             axt.axis('off')
 
     else:
-        axm.scatter(x=local_data[x], y=local_data[y], marker=marker, alpha=alpha, **kwargs)
+        axm.scatter(x=local_data[x], y=local_data[y],
+                    marker=marker, alpha=alpha, **kwargs)
         if fit:
             xs, ys, fn = _get_fit(x, y, local_data, fit, fitparams)
             axm.plot(xs, ys)
@@ -134,7 +137,9 @@ def _get_fit(x, y, df, fit, fitparams):
         mb = np.polyfit(xs, ys, 1, **fitparams)
         fit_fn = np.poly1d(mb)
         # TODO: make this handle precision correctly
-        eq = 'f(x) = {:.4f}x + {:.4f}'.format(fit_fn.coeffs[0], fit_fn.coeffs[1])
+        eq = 'f(x) = {:.4f}x + {:.4f}'.format(
+            fit_fn.coeffs[0], fit_fn.coeffs[1])
+
         return xhat, fit_fn(xhat), eq
 
     elif fit == 'quadratic':
@@ -142,7 +147,9 @@ def _get_fit(x, y, df, fit, fitparams):
         mb = np.polyfit(xs, ys, 2, **fitparams)
         fit_fn = np.poly1d(mb)
         # TODO: make this handle precision correctly...
-        eq = 'f(x) = {:.4f}x^2 + {:.4f}x + {:.4f}'.format(fit_fn.coeffs[0], fit_fn.coeffs[1], fit_fn.coeffs[2])
+        eq = 'f(x) = {:.4f}x^2 + {:.4f}x + {:.4f}'.format(
+            fit_fn.coeffs[0], fit_fn.coeffs[1], fit_fn.coeffs[2])
+
         return xhat, fit_fn(xhat), eq
 
     elif fit == 'smooth':
@@ -167,4 +174,3 @@ def _medianify(df, x, y):
         summ = summ.sort(x)
 
         return summ[x], summ[0]
-
