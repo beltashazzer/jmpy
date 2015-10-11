@@ -1,7 +1,7 @@
 from jmpy import common
 import pandas as pd
-import matplotlib as mpl
 import matplotlib.gridspec as gs
+
 
 def cumprob(x, ax, color=None, marker='.', alpha=1, swapxy=False):
     """
@@ -46,12 +46,14 @@ def regressiontable(text, ax, fig):
     return ax
 
 
-def datatable(x, data, ax, by=None):
+def datatable(x, data, ax, by=None, probs=None):
     """
     Create a datatable on a provided axes
     """
 
-    headers = ['Mean', 'Stdev', 'Min', '10%', '50%', '90%', 'Max', 'N']
+    headers = ['Mean', 'Stdev', 'Min', '05%', '50%', '95%', 'Max', 'N']
+    if probs == 'bayes':
+        headers = ['Mean', 'Stdev', 'Min', '2.5%', '50%', '97.5%', 'Max', 'N']
 
     stats = common.stats.array_stats(x, data=data, by=by)
 
@@ -59,7 +61,10 @@ def datatable(x, data, ax, by=None):
     values = []
     for group, tup in stats.items():
         groups.append(group)
-        array = [round(tup[val], 3) for val in (0, 1, 2, 3, 4, 5, 6, 7)]
+        if probs == 'bayes':
+            array = [round(tup[val], 3) for val in (0, 1, 2, 3, 6, 9, 10, 11)]
+        else:
+            array = [round(tup[val], 3) for val in (0, 1, 2, 4, 6, 8, 10, 11)]
         values.append(array)
 
     tab = ax.table(cellText=values,
@@ -180,28 +185,27 @@ def get_axes(fig, clear=True):
     return axm, axc, axl, axt
 
 
-def create_df(x, y, legend=None, z=None,):
+def create_df(x, y=None, z=None, legend=None, rows=None, cols=None):
     """
-    create a generic dataframe from supplie numpy arrays
+    create a generic dataframe from supplied numpy arrays
     """
-
-    mydict = {}
-    mydict['x'] = x
-    mydict['y'] = y
-
-    if z is not None:
-        mydict['z'] = z
-
-    if legend is not None:
-        mydict['legend'] = legend
-        legend = 'legend'
-
-    data = pd.DataFrame.from_dict(mydict)
+    df = pd.DataFrame()
+    df['x'] = x
     x = 'x'
-    y = 'y'
-
+    if y is not None:
+        df['y'] = y
+        y = 'y'
+    if legend is not None:
+        df['legend'] = legend
+        legend = 'legend'
     if z is not None:
+        df['z'] = z
         z = 'z'
-        return x, y, z, data
+    if cols is not None:
+        df['cols'] = cols
+        cols = 'cols'
+    if rows is not None:
+        df['rows'] = rows
+        rows = 'rows'
 
-    return x, y, legend, data
+    return (x, y, legend, z, cols, rows), df

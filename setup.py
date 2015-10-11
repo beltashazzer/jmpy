@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(name='jmpy',
-      version='0.9.2',
-      description='JMP Style Plotting and Modeling',
+      version='0.10.0',
+      description='Plotting and Modeling Package',
       url='',
       author='David Daycock',
       author_email='daycock@gmail.com',
@@ -21,5 +21,6 @@ setup(name='jmpy',
           'scipy',
           'patsy',
           'statsmodels',
+          'pymc'
       ],
       zip_safe=True)

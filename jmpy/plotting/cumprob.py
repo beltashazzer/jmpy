@@ -8,18 +8,9 @@ from jmpy import common
 from jmpy.plotting import components
 
 
-def cumprob(x,
-            data: pd.DataFrame=None,
-            legend=None,
-            figsize: tuple=(12, 6),
-            xscale: str='linear',
-            yscale: str='linear',
-            cmap: str='default',
-            alpha: float=0.5,
-            marker: str='.',
-            table=True,
-            fig=None,
-            **kwargs):
+def cumprob(x, data=None, legend=None, figsize=(12, 6),
+            xscale='linear', yscale='linear', cmap='default', alpha=0.5,
+            marker='.', table=True, fig=None, axes=None, cgrid=None, **kwargs):
     """
     :param x:  str or ndarray
     :param data: is x is a str, this is a pd.Dataframe
@@ -38,46 +29,51 @@ def cumprob(x,
 
     # if no dataframe is supplied, create one
     if data is None:
-        x, _, legend, data = components.create_df(x, None, legend)
+        (x, _, _, legend, _, _), data = components.create_df(x, None, legend)
 
-    local_data = data.copy()
-    local_data = local_data.reset_index()
-    local_data[x] = local_data[x].astype('float').dropna()
+    df = data.copy()
+    df = df.reset_index()
+    df[x] = df[x].astype('float').dropna()
 
-    min_, max_ = np.min(local_data[x]), np.max(local_data[x])
+    min_, max_ = np.min(df[x]), np.max(df[x])
 
     if fig:
         fig = fig
         canvas = mbb.FigureCanvasAgg(fig)
         axm, axc, axl, axt = components.get_axes(fig)
+    elif axes:
+        axm = axes
     else:
         fig = mpl.figure.Figure(figsize=figsize, tight_layout=True)
         canvas = mbb.FigureCanvasAgg(fig)
         axm, axc, axl, axt = components.create_axes(None, legend, table, fig=fig)
 
-    if table:
+    if table and not axes:
         axt = components.datatable(x, data, axt, by=legend)
 
     if legend:
         # colormap is supposed to be the goto function to get all colormaps
         # should return a colorgrid that maps each point to a set of colors
-        cgrid = common.colors.colormap(local_data[legend], kind='discrete', cmap=cmap)
+        if cgrid is None:
+            cgrid = common.colors.colormap(df[legend], kind='discrete', cmap=cmap)
+
 
         legend_color = {}
-        for i, key in local_data[legend].iteritems():
+        for i, key in df[legend].iteritems():
             legend_color[key] = cgrid[i]
 
-        axl = components.legend(sorted(list(legend_color.items())), axl)
-        axl.set_title(legend,loc='left')
+        if not axes:
+            axl = components.legend(sorted(list(legend_color.items())), axl)
+            axl.set_title(legend,loc='left')
 
-        for group in set(local_data[legend]):
-            axm = components.cumprob(local_data[local_data[legend] == group][x],
+        for group in sorted(set(df[legend])):
+            axm = components.cumprob(df[df[legend] == group][x],
                                        axm,
                                        color=legend_color[group],
                                        marker=marker,
                                        alpha=alpha)
     else:
-        axm = components.cumprob(local_data[x], axm, marker=marker, alpha=alpha)
+        axm = components.cumprob(df[x], axm, marker=marker, alpha=alpha)
 
     # various formating
     for label in axm.get_xticklabels():
@@ -86,5 +82,8 @@ def cumprob(x,
     axm.set_xscale(xscale)
     axm.set_yscale(yscale)
     axm.set_xlabel(x)
+
+    if axes:
+        return axm
 
     return canvas.figure

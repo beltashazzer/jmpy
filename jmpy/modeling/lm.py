@@ -9,7 +9,7 @@ import matplotlib.gridspec as gs
 import scipy.stats as sps
 
 
-def fit(model: str, data: pd.DataFrame, model_type='ols', sample_rate: float=.8, figsize=(10, 10), fontsize: int=12, style='ggplot'):
+def fit(model, data, model_type='ols', sample_rate=.8, figsize=(10, 10), fontsize=12):
     """
     Linear regression model with visualization of fitting parameters
 
@@ -21,9 +21,6 @@ def fit(model: str, data: pd.DataFrame, model_type='ols', sample_rate: float=.8,
     :param fontsize: fonsize for regression output
     :return: tuple of axes.
     """
-
-    if style:
-        plt.style.use(style)
 
     full = data.copy()
     mask = np.random.uniform(low=0, high=1, size=len(full))

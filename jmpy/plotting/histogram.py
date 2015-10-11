@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 
 import matplotlib as mpl
@@ -8,20 +7,10 @@ from jmpy import common
 from jmpy.plotting import components
 
 
-def histogram(x,
-              data: pd.DataFrame=None,
-              legend=None,
-              figsize: tuple=(12, 6),
-              xscale: str='linear',
-              yscale: str='linear',
-              cmap: str='default',
-              alpha: float=0.5,
-              cumprob: bool=False,
-              marker: str='.',
-              bins=25,
-              table=True,
-              fig=None,
-              **kwargs):
+def histogram(x, data=None, legend=None, figsize=(12, 6),
+              xscale='linear', yscale='linear', cmap='default',
+              alpha=0.5, cumprob=False, marker='.', bins=25,
+              table=True, fig=None, axes=None, cgrid=None, **kwargs):
     """
     :param x:  str or ndarray
     :param data: is x is a str, this is a pd.Dataframe
@@ -42,13 +31,13 @@ def histogram(x,
 
     # if no dataframe is supplied, create one
     if data is None:
-        x, _, legend, data = components.create_df(x, None, legend)
+        (x, _, _, legend, _, _), data = components.create_df(x, None, legend)
 
-    local_data = data.copy()
-    local_data = local_data.reset_index()
-    local_data[x] = local_data[x].astype('float').dropna()
+    df = data.copy()
+    df = df.reset_index()
+    df[x] = df[x].astype('float').dropna()
 
-    min_, max_ = np.min(local_data[x]), np.max(local_data[x])
+    min_, max_ = np.min(df[x]), np.max(df[x])
 
     binlist = np.linspace(min_, max_, bins)
 
@@ -56,45 +45,50 @@ def histogram(x,
         fig = fig
         canvas = mbb.FigureCanvasAgg(fig)
         axm, axc, axl, axt = components.get_axes(fig)
+    elif axes:
+        axm = axes
     else:
         fig = mpl.figure.Figure(figsize=figsize, tight_layout=True)
         canvas = mbb.FigureCanvasAgg(fig)
         axm, axc, axl, axt = components.create_axes(cumprob, legend, table, fig=fig)
 
-    if table:
+    if table and not axes:
         axt = components.datatable(x, data, axt, by=legend)
 
     if legend:
         # colormap is supposed to be the goto function to get all colormaps
         # should return a colorgrid that maps each point to a set of colors
-        cgrid = common.colors.colormap(local_data[legend], kind='discrete', cmap=cmap)
+        if cgrid is None:
+            cgrid = common.colors.colormap(df[legend], kind='discrete', cmap=cmap)
 
         legend_color = {}
-        for i, key in local_data[legend].iteritems():
+        for i, key in df[legend].iteritems():
             legend_color[key] = cgrid[i]
 
-        axl = components.legend(sorted(list(legend_color.items())), axl)
-        axl.set_title(legend, loc='left')
+        if not axes:
+            axl = components.legend(sorted(list(legend_color.items())), axl)
+            axl.set_title(legend, loc='left')
 
-        for group in set(local_data[legend]):
-            axm.hist(np.asarray(local_data[local_data[legend] == group][x]),
+        for group in sorted(set(df[legend])):
+            axm.hist(np.asarray(df[df[legend] == group][x]),
                      alpha=alpha,
                      bins=binlist,
                      color=legend_color[group],
+                     label=str(group),
                      **kwargs)
-            if cumprob:
-                axc = components.cumprob(local_data[local_data[legend] == group][x],
+            if cumprob and not axes:
+                axc = components.cumprob(df[df[legend] == group][x],
                                          axc,
                                          color=legend_color[group],
                                          marker=marker,
                                          alpha=alpha)
     else:
-        axm.hist(np.asarray(local_data[x]),
+        axm.hist(np.asarray(df[x]),
                  alpha=alpha,
                  bins=binlist,
                  **kwargs)
         if cumprob:
-            axc = components.cumprob(local_data[x], axc, marker=marker, alpha=alpha)
+            axc = components.cumprob(df[x], axc, marker=marker, alpha=alpha)
 
     # various formating
     axm.set_xlim(min_, max_)
@@ -111,5 +105,8 @@ def histogram(x,
         axc.set_yticklabels([], visible=False)
         for label in axc.get_xticklabels():
             label.set_rotation(90)
+
+    if axes:
+        return axm
 
     return canvas.figure

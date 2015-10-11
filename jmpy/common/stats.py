@@ -13,8 +13,8 @@ def array_stats(x, data=None, by=None, custom=None):
     """
     df = data
 
-    stats = col.namedtuple('stats', ['mean', 'stdev', 'min', 'ten', 'med', 'ninty', 'max', 'n'])
-    
+    stats = col.namedtuple('stats', ['mean', 'stdev', 'min', 'z2p5', 'five', 'ten', 'med', 'ninty', 'nintyfive', 'z97p5', 'max', 'n'])
+
     # get x, y and by as ndarray's
     if df is not None:
         x = df[x].copy()
@@ -23,7 +23,7 @@ def array_stats(x, data=None, by=None, custom=None):
             groups = sorted(set(by))
         except ValueError:
             by = None
-    
+
     if by is None:
         return {'All': stats(*_basestats(x))}
     else:
@@ -39,20 +39,24 @@ def _basestats(ndarray):
     """
 
     ndarray = ndarray.copy().dropna()
-    
+
     if ndarray.size == 0:
-        return np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        return (np.nan,) * 12
 
     mean = np.mean(ndarray)
     stdev = np.std(ndarray)
     min_ = np.min(ndarray)
+    z2p5 = np.percentile(ndarray, 2.5)
+    five = np.percentile(ndarray, 5)
     ten = np.percentile(ndarray, 10)
     med = np.median(ndarray)
     ninty = np.percentile(ndarray, 90)
+    nintyfive = np.percentile(ndarray, 95)
+    z97p5 = np.percentile(ndarray, 97.5)
     max_ = np.max(ndarray)
     n = np.size(ndarray)
-    
-    return mean, stdev, min_, ten, med, ninty, max_, n
+
+    return mean, stdev, min_, z2p5, five, ten, med, ninty, nintyfive, z97p5, max_, n
 
 def pct_sigma(array):
     """
@@ -77,7 +81,7 @@ def pct_sigma(array):
     y = array.copy()
     y = y[~np.isnan(y)]
     y.sort()
-    
+
     if y.size == 0:
         blank = np.zeros(y.shape)
         return blank, blank, blank

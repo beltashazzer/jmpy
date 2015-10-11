@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib as mpl
 
 
-def colormap(series, kind: str='discrete', cmap: str='default'):
+def colormap(series, kind='discrete', cmap='default'):
     if kind == 'discrete' and cmap != 'default':
         c = plt.get_cmap(cmap)
 
