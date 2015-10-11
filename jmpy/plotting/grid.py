@@ -90,7 +90,10 @@ def grid(rows=None, cols=None, data=None, chart=None, args=None, figsize=(8, 8),
     # so then we will default to the longest of the cols/rows
     charts = list(itertools.product(cols_array, rows_array))
     if not list(charts):
-        charts = list(itertools.zip_longest(cols_array, rows_array))
+        try:
+            charts = list(itertools.zip_longest(cols_array, rows_array))
+        except AttributeError:  #py2
+            charts = list(itertools.izip_longest(cols_array, rows_array))
 
     if legend:
         cgrid = common.colors.colormap(df[legend], kind='discrete', cmap=cmap)
