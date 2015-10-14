@@ -8,7 +8,13 @@ setup(name='jmpy',
       author='David Daycock',
       author_email='daycock@gmail.com',
       license='MIT',
-      packages=['jmpy'],
+      packages=[
+        'jmpy',
+        'jmpy.common',
+        'jmpy.plotting',
+        'jmpy.modeling',
+        'jmpy.bayes'
+        ],
       package_data={'jmpy': ['*.html', '*.ipynb', '*.rst', '*.md']},
       install_requires=[
           'pandas',
