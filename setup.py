@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='jmpy',
-      version='0.10.0',
+      version='0.10.1',
       description='Plotting and Modeling Package',
       url='https://github.com/beltashazzer/jmpy',
       download_url = 'https://github.com/beltashazzer/jmpy/tarball/0.1',
