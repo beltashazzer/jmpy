@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jmpy.bayes package &mdash; &#39;jmpy&#39; &#39;0.10&#39; documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '&#39;0.10&#39;',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="&#39;jmpy&#39; &#39;0.10&#39; documentation" href="index.html" />
+    <link rel="up" title="jmpy package" href="jmpy.html" />
+    <link rel="next" title="jmpy.common package" href="jmpy.common.html" />
+    <link rel="prev" title="jmpy package" href="jmpy.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="jmpy.common.html" title="jmpy.common package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="jmpy.html" title="jmpy package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">&#39;jmpy&#39; &#39;0.10&#39; documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="jmpy.html" accesskey="U">jmpy package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="jmpy-bayes-package">
+<h1>jmpy.bayes package<a class="headerlink" href="#jmpy-bayes-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-jmpy.bayes.oneway">
+<span id="jmpy-bayes-oneway-module"></span><h2>jmpy.bayes.oneway module<a class="headerlink" href="#module-jmpy.bayes.oneway" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="jmpy.bayes.oneway.JbResult">
+<em class="property">class </em><code class="descclassname">jmpy.bayes.oneway.</code><code class="descname">JbResult</code><span class="sig-paren">(</span><em>model</em>, <em>groups</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/bayes/oneway.html#JbResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.bayes.oneway.JbResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="jmpy.bayes.oneway.JbResult.result">
+<code class="descname">result</code><span class="sig-paren">(</span><em>boxkwargs=None</em>, <em>figsize=(12</em>, <em>10)</em>, <em>maxpoints=1000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/bayes/oneway.html#JbResult.result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.bayes.oneway.JbResult.result" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jmpy.bayes.oneway.JbResult.traceplot">
+<code class="descname">traceplot</code><span class="sig-paren">(</span><em>name</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/bayes/oneway.html#JbResult.traceplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.bayes.oneway.JbResult.traceplot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="jmpy.bayes.oneway.oneway">
+<code class="descclassname">jmpy.bayes.oneway.</code><code class="descname">oneway</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>data=None</em>, <em>control=None</em>, <em>iterations=24000</em>, <em>burn=4000</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/bayes/oneway.html#oneway"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.bayes.oneway.oneway" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a oneway anova via bayesian markov-chain monte carlo</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; str or ndarray, x axis (grouping axis)</li>
+<li><strong>y</strong> &#8211; str or ndarray, y axis (values)</li>
+<li><strong>data</strong> &#8211; pandas dataframe or Null</li>
+<li><strong>control</strong> &#8211; If x has greater than two groups, you need to compare vs. the control</li>
+<li><strong>iterations</strong> &#8211; </li>
+<li><strong>burn</strong> &#8211; </li>
+<li><strong>verbose</strong> &#8211; bool; default=False; turns on pymc progress bar</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a results object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-jmpy.bayes">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-jmpy.bayes" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">jmpy.bayes package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-jmpy.bayes.oneway">jmpy.bayes.oneway module</a></li>
+<li><a class="reference internal" href="#module-jmpy.bayes">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="jmpy.html"
+                        title="previous chapter">jmpy package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="jmpy.common.html"
+                        title="next chapter">jmpy.common package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/jmpy.bayes.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, 'David.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+      |
+      <a href="_sources/jmpy.bayes.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+
+    
+  </body>
+</html>

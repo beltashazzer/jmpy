@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jmpy.plotting.boxplot &mdash; &#39;jmpy&#39; &#39;0.10&#39; documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '&#39;0.10&#39;',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="&#39;jmpy&#39; &#39;0.10&#39; documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">&#39;jmpy&#39; &#39;0.10&#39; documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for jmpy.plotting.boxplot</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">collections</span> <span class="kn">as</span> <span class="nn">col</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.backends.backend_agg</span> <span class="kn">as</span> <span class="nn">mbb</span>
+
+<span class="kn">from</span> <span class="nn">jmpy</span> <span class="kn">import</span> <span class="n">common</span>
+<span class="kn">from</span> <span class="nn">jmpy.plotting</span> <span class="kn">import</span> <span class="n">components</span>
+
+
+<div class="viewcode-block" id="boxplot"><a class="viewcode-back" href="../../../jmpy.plotting.html#jmpy.plotting.boxplot.boxplot">[docs]</a><span class="k">def</span> <span class="nf">boxplot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39;o&#39;</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cumprob</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s">&#39;linear&#39;</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;default&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>  <span class="n">orderby</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">fig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cgrid</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Boxplot function</span>
+<span class="sd">    :param x: str or ndarray</span>
+<span class="sd">    :param y: str or ndarray</span>
+<span class="sd">    :param data: pd.Dataframe, source of data</span>
+<span class="sd">    :param legend: str or ndarray color code by this column</span>
+<span class="sd">    :param marker: str, default marker to use in plots</span>
+<span class="sd">    :param alpha: float, alpha for plots</span>
+<span class="sd">    :param points: bool, display or not display points</span>
+<span class="sd">    :param cumprob: bool, display cumprob plot?</span>
+<span class="sd">    :param yscale: str, default = linear, can be log or symlog too</span>
+<span class="sd">    :param cmap: str, matplotlib colormap</span>
+<span class="sd">    :param figsize: tuple(int,int), figure size</span>
+<span class="sd">    :param orderby: str, order x axis by this param</span>
+<span class="sd">    :param datatable: bool, show or not show datatable is available</span>
+<span class="sd">    :param fig: matplotlib figure, if you want to re-use the figure, pass in one already created</span>
+<span class="sd">    :param axes: matplotlib axes, if this is specified, the boxplot will be created on that axes,</span>
+<span class="sd">                    and other axes will not be created.</span>
+<span class="sd">    :param kwargs:</span>
+<span class="sd">    :return: matplotlib figure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># if no dataframe is supplied, create one</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">create_df</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">legend</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;str&#39;</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+    <span class="c"># TODO:  this doesn&#39;t really work right</span>
+    <span class="k">if</span> <span class="n">orderby</span><span class="p">:</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="n">orderby</span><span class="p">]</span>
+        <span class="n">map_of_x</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">mg</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">groups</span><span class="p">):</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_group</span><span class="p">(</span><span class="n">mg</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="n">map_of_x</span><span class="p">[</span><span class="n">mg</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="n">orderby</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">list_to_order</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">map_of_x</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+
+        <span class="n">order</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">x_to_loc</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">map_of_x</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">list_to_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="n">x_to_loc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+            <span class="n">order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+
+    <span class="n">min_</span><span class="p">,</span> <span class="n">max_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">])</span>
+
+    <span class="c"># if an axis is supplied, we will not create another one</span>
+    <span class="c"># if a figure is supplied, we will reuse the figure</span>
+    <span class="k">if</span> <span class="n">fig</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">fig</span>
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">mbb</span><span class="o">.</span><span class="n">FigureCanvasAgg</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">axm</span><span class="p">,</span> <span class="n">axc</span><span class="p">,</span> <span class="n">axl</span><span class="p">,</span> <span class="n">axt</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">get_axes</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="n">axm</span> <span class="o">=</span> <span class="n">axes</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">mbb</span><span class="o">.</span><span class="n">FigureCanvasAgg</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">axm</span><span class="p">,</span> <span class="n">axc</span><span class="p">,</span> <span class="n">axl</span><span class="p">,</span> <span class="n">axt</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">create_axes</span><span class="p">(</span><span class="n">cumprob</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">orderby</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axm</span><span class="p">,</span> <span class="n">showfliers</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axm</span><span class="p">,</span> <span class="n">showfliers</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c"># We need to identify all of the unique entries in the groupby column</span>
+    <span class="n">unique_groups</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+    <span class="n">nonan_grps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">unique_groups</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s">&#39;nan&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
+            <span class="n">nonan_grps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">legend</span><span class="p">:</span>
+        <span class="c"># colormap is supposed to be the goto function to get all colormaps</span>
+        <span class="c"># should return a colorgrid that maps each point to a set of colors</span>
+        <span class="c"># if cgrid is already supplied, we will re-use that color grid</span>
+        <span class="k">if</span> <span class="n">cgrid</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cgrid</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">colormap</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">legend</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s">&#39;discrete&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+
+        <span class="n">legend_color</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">legend</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">legend_color</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">cgrid</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">axes</span><span class="p">:</span>  <span class="c"># skip over creation of legend if axes is provided</span>
+            <span class="n">axl</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">legend_color</span><span class="o">.</span><span class="n">items</span><span class="p">())),</span> <span class="n">axl</span><span class="p">)</span>
+            <span class="n">axl</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s">&#39;left&#39;</span><span class="p">)</span>
+
+    <span class="c"># add all the point level data</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nonan_grps</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">groups</span><span class="p">):</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="n">val</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">orderby</span><span class="p">:</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">x_to_loc</span><span class="p">[</span><span class="n">val</span><span class="p">]</span>
+            <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">ys</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># create the jitters for the points</span>
+            <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">ys</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">points</span><span class="p">:</span>
+
+            <span class="c"># if cgrid is None, that is the standard way of creating the plot</span>
+            <span class="c"># cgrid is typically supplied by the jp.grid function</span>
+            <span class="k">if</span> <span class="n">legend</span> <span class="ow">or</span> <span class="n">cgrid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">cs</span> <span class="o">=</span> <span class="n">cgrid</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="n">val</span><span class="p">]</span>
+                <span class="n">axm</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+                            <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">axm</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+                            <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c"># skip creating the cumprob plot if the axes was supplied</span>
+        <span class="k">if</span> <span class="n">cumprob</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">axes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">legend</span><span class="p">:</span>
+                <span class="n">cs</span> <span class="o">=</span> <span class="n">cgrid</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="n">val</span><span class="p">]</span>
+                <span class="n">axc</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">cumprob</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">axc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">swapxy</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">axc</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">cumprob</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">axc</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">swapxy</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="c"># various formating</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">min_</span><span class="p">,</span> <span class="n">max_</span><span class="p">)</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">axm</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">():</span>
+        <span class="n">label</span><span class="o">.</span><span class="n">set_rotation</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cumprob</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="n">axc</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">min_</span><span class="p">,</span> <span class="n">max_</span><span class="p">)</span>
+        <span class="n">axc</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+        <span class="n">axc</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([],</span> <span class="n">visible</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">axc</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">():</span>
+            <span class="n">label</span><span class="o">.</span><span class="n">set_rotation</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">table</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="n">components</span><span class="o">.</span><span class="n">datatable</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">axt</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">axm</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">canvas</span><span class="o">.</span><span class="n">figure</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, 'David.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

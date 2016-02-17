@@ -1,0 +1,346 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jmpy.plotting package &mdash; &#39;jmpy&#39; &#39;0.10&#39; documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '&#39;0.10&#39;',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="&#39;jmpy&#39; &#39;0.10&#39; documentation" href="index.html" />
+    <link rel="up" title="jmpy package" href="jmpy.html" />
+    <link rel="prev" title="jmpy.modeling package" href="jmpy.modeling.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="jmpy.modeling.html" title="jmpy.modeling package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">&#39;jmpy&#39; &#39;0.10&#39; documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="jmpy.html" accesskey="U">jmpy package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="jmpy-plotting-package">
+<h1>jmpy.plotting package<a class="headerlink" href="#jmpy-plotting-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-jmpy.plotting.boxplot">
+<span id="jmpy-plotting-boxplot-module"></span><h2>jmpy.plotting.boxplot module<a class="headerlink" href="#module-jmpy.plotting.boxplot" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="jmpy.plotting.boxplot.boxplot">
+<code class="descclassname">jmpy.plotting.boxplot.</code><code class="descname">boxplot</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>data=None</em>, <em>legend=None</em>, <em>marker='o'</em>, <em>alpha=0.5</em>, <em>points=True</em>, <em>cumprob=False</em>, <em>yscale='linear'</em>, <em>cmap='default'</em>, <em>figsize=(12</em>, <em>6)</em>, <em>orderby=None</em>, <em>table=True</em>, <em>fig=None</em>, <em>axes=None</em>, <em>cgrid=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/boxplot.html#boxplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.boxplot.boxplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boxplot function
+:param x: str or ndarray
+:param y: str or ndarray
+:param data: pd.Dataframe, source of data
+:param legend: str or ndarray color code by this column
+:param marker: str, default marker to use in plots
+:param alpha: float, alpha for plots
+:param points: bool, display or not display points
+:param cumprob: bool, display cumprob plot?
+:param yscale: str, default = linear, can be log or symlog too
+:param cmap: str, matplotlib colormap
+:param figsize: tuple(int,int), figure size
+:param orderby: str, order x axis by this param
+:param datatable: bool, show or not show datatable is available
+:param fig: matplotlib figure, if you want to re-use the figure, pass in one already created
+:param axes: matplotlib axes, if this is specified, the boxplot will be created on that axes,</p>
+<blockquote>
+<div>and other axes will not be created.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kwargs</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">matplotlib figure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-jmpy.plotting.components">
+<span id="jmpy-plotting-components-module"></span><h2>jmpy.plotting.components module<a class="headerlink" href="#module-jmpy.plotting.components" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="jmpy.plotting.components.create_axes">
+<code class="descclassname">jmpy.plotting.components.</code><code class="descname">create_axes</code><span class="sig-paren">(</span><em>cumprob</em>, <em>legend</em>, <em>dt</em>, <em>fig</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/components.html#create_axes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.components.create_axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Private method to create all the axes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jmpy.plotting.components.create_df">
+<code class="descclassname">jmpy.plotting.components.</code><code class="descname">create_df</code><span class="sig-paren">(</span><em>x</em>, <em>y=None</em>, <em>z=None</em>, <em>legend=None</em>, <em>rows=None</em>, <em>cols=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/components.html#create_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.components.create_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a generic dataframe from supplied numpy arrays</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jmpy.plotting.components.cumprob">
+<code class="descclassname">jmpy.plotting.components.</code><code class="descname">cumprob</code><span class="sig-paren">(</span><em>x</em>, <em>ax</em>, <em>color=None</em>, <em>marker='.'</em>, <em>alpha=1</em>, <em>swapxy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/components.html#cumprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.components.cumprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a cumprob plot on a provided axes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jmpy.plotting.components.datatable">
+<code class="descclassname">jmpy.plotting.components.</code><code class="descname">datatable</code><span class="sig-paren">(</span><em>x</em>, <em>data</em>, <em>ax</em>, <em>by=None</em>, <em>probs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/components.html#datatable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.components.datatable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a datatable on a provided axes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jmpy.plotting.components.get_axes">
+<code class="descclassname">jmpy.plotting.components.</code><code class="descname">get_axes</code><span class="sig-paren">(</span><em>fig</em>, <em>clear=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/components.html#get_axes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.components.get_axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Private method to get all the axes from a figure,
+but put in the correct order</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jmpy.plotting.components.legend">
+<code class="descclassname">jmpy.plotting.components.</code><code class="descname">legend</code><span class="sig-paren">(</span><em>labelcolor</em>, <em>axl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/components.html#legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.components.legend" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates a legend axes given a list of name, color tuple and an axes name</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jmpy.plotting.components.regressiontable">
+<code class="descclassname">jmpy.plotting.components.</code><code class="descname">regressiontable</code><span class="sig-paren">(</span><em>text</em>, <em>ax</em>, <em>fig</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/components.html#regressiontable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.components.regressiontable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the table for the scatter plot.
+Pass in text and you get a axis back.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-jmpy.plotting.contour">
+<span id="jmpy-plotting-contour-module"></span><h2>jmpy.plotting.contour module<a class="headerlink" href="#module-jmpy.plotting.contour" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="jmpy.plotting.contour.contour">
+<code class="descclassname">jmpy.plotting.contour.</code><code class="descname">contour</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em>, <em>data=None</em>, <em>marker=None</em>, <em>alpha=0.5</em>, <em>xscale='linear'</em>, <em>yscale='linear'</em>, <em>cmap=None</em>, <em>ncontours=100</em>, <em>gridsize=100</em>, <em>colorbar=True</em>, <em>labels=False</em>, <em>figsize=(12</em>, <em>6)</em>, <em>filled=True</em>, <em>fig=None</em>, <em>axes=None</em>, <em>cgrid=None</em>, <em>axislabels=True</em>, <em>axisticks=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/contour.html#contour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.contour.contour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a contour plot from x, y, ans z values</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-jmpy.plotting.cumprob">
+<span id="jmpy-plotting-cumprob-module"></span><h2>jmpy.plotting.cumprob module<a class="headerlink" href="#module-jmpy.plotting.cumprob" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="jmpy.plotting.cumprob.cumprob">
+<code class="descclassname">jmpy.plotting.cumprob.</code><code class="descname">cumprob</code><span class="sig-paren">(</span><em>x</em>, <em>data=None</em>, <em>legend=None</em>, <em>figsize=(12</em>, <em>6)</em>, <em>xscale='linear'</em>, <em>yscale='linear'</em>, <em>cmap='default'</em>, <em>alpha=0.5</em>, <em>marker='.'</em>, <em>table=True</em>, <em>fig=None</em>, <em>axes=None</em>, <em>cgrid=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/cumprob.html#cumprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.cumprob.cumprob" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; str or ndarray</li>
+<li><strong>data</strong> &#8211; is x is a str, this is a pd.Dataframe</li>
+<li><strong>legend</strong> &#8211; str or ndarray,</li>
+<li><strong>figsize</strong> &#8211; default is 9,6; sets the figure size</li>
+<li><strong>xscale</strong> &#8211; default is linear, set the scale type [linear, log, symlog]</li>
+<li><strong>yscale</strong> &#8211; default is linear, set the scale type [linear, log, symlog]</li>
+<li><strong>cmap</strong> &#8211; colormap to use for plotting</li>
+<li><strong>alpha</strong> &#8211; default is 0.5</li>
+<li><strong>marker</strong> &#8211; set matplotlib marker</li>
+<li><strong>table</strong> &#8211; bool, default is True, prints the datatable summary to the graph</li>
+<li><strong>kwargs</strong> &#8211; passed to matplotlib hist function</li>
+<li><strong>fig</strong> &#8211; matplotlib figure if you want to reuse the figure.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">matplotlib figure</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-jmpy.plotting.grid">
+<span id="jmpy-plotting-grid-module"></span><h2>jmpy.plotting.grid module<a class="headerlink" href="#module-jmpy.plotting.grid" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="jmpy.plotting.grid.grid">
+<code class="descclassname">jmpy.plotting.grid.</code><code class="descname">grid</code><span class="sig-paren">(</span><em>rows=None</em>, <em>cols=None</em>, <em>data=None</em>, <em>chart=None</em>, <em>args=None</em>, <em>figsize=(8</em>, <em>8)</em>, <em>legend=None</em>, <em>cmap='default'</em>, <em>colorbar=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/grid.html#grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.grid.grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a grid from pandas data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>grid</strong> &#8211; dictionary of x and y columns</li>
+<li><strong>data</strong> &#8211; pandas dataframe or none</li>
+<li><strong>funct</strong> &#8211; jumpy plotting fuction, specified as a lambda
+with data source as a variable</li>
+<li><strong>args</strong> &#8211; argument dictionary to pass to the chart</li>
+<li><strong>legend</strong> &#8211; color by this column</li>
+<li><strong>figsize</strong> &#8211; tuple to set figsize</li>
+<li><strong>cmap</strong> &#8211; matplotlib colormap to use</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-jmpy.plotting.histogram">
+<span id="jmpy-plotting-histogram-module"></span><h2>jmpy.plotting.histogram module<a class="headerlink" href="#module-jmpy.plotting.histogram" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="jmpy.plotting.histogram.histogram">
+<code class="descclassname">jmpy.plotting.histogram.</code><code class="descname">histogram</code><span class="sig-paren">(</span><em>x</em>, <em>data=None</em>, <em>legend=None</em>, <em>figsize=(12</em>, <em>6)</em>, <em>xscale='linear'</em>, <em>yscale='linear'</em>, <em>cmap='default'</em>, <em>alpha=0.5</em>, <em>cumprob=False</em>, <em>marker='.'</em>, <em>bins=25</em>, <em>table=True</em>, <em>fig=None</em>, <em>axes=None</em>, <em>cgrid=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/histogram.html#histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.histogram.histogram" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; str or ndarray</li>
+<li><strong>data</strong> &#8211; is x is a str, this is a pd.Dataframe</li>
+<li><strong>legend</strong> &#8211; str or ndarray,</li>
+<li><strong>figsize</strong> &#8211; default is 9,6; sets the figure size</li>
+<li><strong>xscale</strong> &#8211; default is linear, set the scale type [linear, log, symlog]</li>
+<li><strong>yscale</strong> &#8211; default is linear, set the scale type [linear, log, symlog]</li>
+<li><strong>cmap</strong> &#8211; colormap to use for plotting</li>
+<li><strong>alpha</strong> &#8211; default is 0.5</li>
+<li><strong>cumprob</strong> &#8211; bool, determines if cumprob plot is displayed</li>
+<li><strong>marker</strong> &#8211; set matplotlib marker</li>
+<li><strong>bins</strong> &#8211; # of bins to use</li>
+<li><strong>table</strong> &#8211; bool, default is True, prints the datatable summary to the graph</li>
+<li><strong>kwargs</strong> &#8211; passed to matplotlib hist function</li>
+<li><strong>fig</strong> &#8211; matplotlib figure instance for re-use...</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-jmpy.plotting.scatter">
+<span id="jmpy-plotting-scatter-module"></span><h2>jmpy.plotting.scatter module<a class="headerlink" href="#module-jmpy.plotting.scatter" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="jmpy.plotting.scatter.scatter">
+<code class="descclassname">jmpy.plotting.scatter.</code><code class="descname">scatter</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>data=None</em>, <em>legend=None</em>, <em>marker='o'</em>, <em>alpha=0.5</em>, <em>xscale='linear'</em>, <em>yscale='linear'</em>, <em>cmap='default'</em>, <em>figsize=(12</em>, <em>6)</em>, <em>fit=None</em>, <em>fitparams=None</em>, <em>table=True</em>, <em>fig=None</em>, <em>axes=None</em>, <em>cgrid=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/plotting/scatter.html#scatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.plotting.scatter.scatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plots with regression lines
+:param x:  str or ndarray
+:param y: str or ndarray
+:param data: pandas.Dataframe
+:param legend: str or ndarray, color/fit by this column
+:param marker: matplotlib marker style
+:param alpha: float, matplotlib alpha
+:param xscale: default == linear, any of matplotlib scale types
+:param yscale: default == linear, any of matplotlib scale types
+:param cmap: any of matplotlib cmaps
+:param figsize: default == (9,6);
+:param fit: [linear, quadratic, smooth, interpolate]
+:param fitparams: params to pass to fitting function
+:param table:  show the regression table
+:param kwargs:
+:return: fig, (axes)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-jmpy.plotting">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-jmpy.plotting" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">jmpy.plotting package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-jmpy.plotting.boxplot">jmpy.plotting.boxplot module</a></li>
+<li><a class="reference internal" href="#module-jmpy.plotting.components">jmpy.plotting.components module</a></li>
+<li><a class="reference internal" href="#module-jmpy.plotting.contour">jmpy.plotting.contour module</a></li>
+<li><a class="reference internal" href="#module-jmpy.plotting.cumprob">jmpy.plotting.cumprob module</a></li>
+<li><a class="reference internal" href="#module-jmpy.plotting.grid">jmpy.plotting.grid module</a></li>
+<li><a class="reference internal" href="#module-jmpy.plotting.histogram">jmpy.plotting.histogram module</a></li>
+<li><a class="reference internal" href="#module-jmpy.plotting.scatter">jmpy.plotting.scatter module</a></li>
+<li><a class="reference internal" href="#module-jmpy.plotting">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="jmpy.modeling.html"
+                        title="previous chapter">jmpy.modeling package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/jmpy.plotting.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, 'David.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+      |
+      <a href="_sources/jmpy.plotting.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+
+    
+  </body>
+</html>
