@@ -80,7 +80,7 @@ def pct_sigma(array):
 
     y = array.copy()
     y = y[~np.isnan(y)]
-    y.sort()
+    y = np.sort(y)
 
     if y.size == 0:
         blank = np.zeros(y.shape)

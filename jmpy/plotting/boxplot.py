@@ -11,7 +11,7 @@ from jmpy.plotting import components
 def boxplot(x, y, data=None, legend=None, marker='o',
             alpha=.5, points=True, cumprob=False, yscale='linear',
             cmap='default', figsize=(12, 6),  orderby=None, table=True,
-            fig=None, axes=None, cgrid=None, **kwargs):
+            fig=None, axes=None, cgrid=None, violin=False, **kwargs):
     """
     Boxplot function
     :param x: str or ndarray
@@ -31,6 +31,8 @@ def boxplot(x, y, data=None, legend=None, marker='o',
     :param axes: matplotlib axes, if this is specified, the boxplot will be created on that axes,
                     and other axes will not be created.
     :param kwargs:
+
+
     :return: matplotlib figure
     """
 
@@ -76,10 +78,19 @@ def boxplot(x, y, data=None, legend=None, marker='o',
         canvas = mbb.FigureCanvasAgg(fig)
         axm, axc, axl, axt = components.create_axes(cumprob, legend, table, fig=fig)
 
-    if orderby:
-        df.boxplot(column=y, by=x, ax=axm, showfliers=False, positions=order, fontsize=8, **kwargs)
+    if violin:
+        array = []
+        for arr in sorted(set(df[x])):
+            array.append(df[df[x] == arr][y])
+
+        axm.violinplot(array, showmedians=True)
+
     else:
-        df.boxplot(column=y, by=x, ax=axm, showfliers=False, fontsize=8, **kwargs)
+        if orderby:
+            df.boxplot(column=y, by=x, ax=axm, showfliers=False,
+                       positions=order, fontsize=8, **kwargs)
+        else:
+            df.boxplot(column=y, by=x, ax=axm, showfliers=False, fontsize=8, **kwargs)
 
     # We need to identify all of the unique entries in the groupby column
     unique_groups = set(df[x])

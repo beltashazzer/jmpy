@@ -1,6 +1,7 @@
 from jmpy import common
 import pandas as pd
 import matplotlib.gridspec as gs
+import warnings
 
 
 def cumprob(x, ax, color=None, marker='.', alpha=1, swapxy=False):
@@ -157,6 +158,7 @@ def create_axes(cumprob, legend, dt, fig):
         ax.tick_params(left="off")
 
     fig.set_tight_layout({'w_pad': -2})
+
     return (axm, axc, axl, axt)
 
 

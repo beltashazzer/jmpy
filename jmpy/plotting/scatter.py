@@ -42,7 +42,7 @@ def scatter(x, y, data=None, legend=None,  marker='o', alpha=.5,
     df = df[[i for i in (x, y, legend) if i]]
     # many of the fitting routines don't work with nan or non-sorted data.
     df = df.dropna()
-    df.sort(x)
+    df.sort_values(x)
     df = df.reset_index()
 
     # fit axis is for the regression equations
@@ -169,6 +169,6 @@ def _medianify(df, x, y):
         summ = t.groupby(x).agg(np.median)
         summ = summ.unstack()
         summ = summ.reset_index()
-        summ = summ.sort(x)
+        summ = summ.sort_values(x)
 
         return summ[x], summ[0]

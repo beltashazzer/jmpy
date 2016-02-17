@@ -21,7 +21,6 @@ __Overview__
 
 [Grid Layout](#grid)  
 [Modeling](#modeling)  
-[Bayes](#bayes)  
 
 
 ```python
@@ -36,11 +35,14 @@ plt.style.use('bmh')
 
 import jmpy.plotting as jp
 import jmpy.modeling as jm
-import jmpy.bayes as jb
 
 import warnings
 warnings.filterwarnings('ignore')
 ```
+
+    The autoreload extension is already loaded. To reload it, use:
+      %reload_ext autoreload
+    
 
 <a id='plotting'></a>
 ### Plotting  
@@ -101,45 +103,45 @@ df.head()
       <th>0</th>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>1</td>
-      <td>30</td>
+      <td>3</td>
+      <td>50</td>
       <td>0.4</td>
-      <td>-5.112144</td>
-      <td>27.347071</td>
-      <td>17.030000</td>
+      <td>-9.081563</td>
+      <td>69.428600</td>
+      <td>51.050000</td>
     </tr>
     <tr>
       <th>1</th>
       <td>0.401606</td>
       <td>0.161288</td>
-      <td>7</td>
-      <td>10</td>
-      <td>0.4</td>
-      <td>8.348483</td>
-      <td>116.605341</td>
-      <td>119.413219</td>
+      <td>3</td>
+      <td>50</td>
+      <td>0.1</td>
+      <td>5.957173</td>
+      <td>66.168140</td>
+      <td>51.453219</td>
     </tr>
     <tr>
       <th>2</th>
       <td>0.803213</td>
       <td>0.645151</td>
-      <td>1</td>
-      <td>30</td>
+      <td>7</td>
+      <td>10</td>
       <td>0.1</td>
-      <td>-6.966017</td>
-      <td>0.718946</td>
-      <td>17.839664</td>
+      <td>-1.048492</td>
+      <td>110.819879</td>
+      <td>119.819664</td>
     </tr>
     <tr>
       <th>3</th>
       <td>1.204819</td>
       <td>1.451589</td>
-      <td>5</td>
+      <td>7</td>
       <td>50</td>
       <td>0.4</td>
-      <td>-9.222902</td>
-      <td>93.589645</td>
-      <td>86.269335</td>
+      <td>-15.881455</td>
+      <td>111.754919</td>
+      <td>120.269335</td>
     </tr>
     <tr>
       <th>4</th>
@@ -147,9 +149,9 @@ df.head()
       <td>2.580604</td>
       <td>3</td>
       <td>50</td>
-      <td>0.1</td>
-      <td>-27.602927</td>
-      <td>47.915832</td>
+      <td>0.4</td>
+      <td>-19.796739</td>
+      <td>57.810824</td>
       <td>52.682232</td>
     </tr>
   </tbody>
@@ -220,6 +222,21 @@ fig
 
 
 
+Violin plots can be created in the boxplot function:
+
+
+```python
+fig = jp.boxplot(x='xd', y='y', data=df, legend='xd', cumprob=True, violin=True)
+fig
+```
+
+
+
+
+![png](README_files/README_14_0.png)
+
+
+
 ___
 <a id='scatter'></a>
 You can also create a scatter plot with a fit.
@@ -232,7 +249,7 @@ jp.scatter(x='xc', y='y', data=df, legend='xd', fit='linear', marker='^')
 
 
 
-![png](README_files/README_14_0.png)
+![png](README_files/README_16_0.png)
 
 
 
@@ -246,7 +263,7 @@ jp.scatter(xc, y=y, legend=xd, fit='linear', marker='^')
 
 
 
-![png](README_files/README_16_0.png)
+![png](README_files/README_18_0.png)
 
 
 
@@ -258,7 +275,7 @@ jp.scatter('xc2', 'y', df, legend='xd', fit='quadratic', marker='o')
 
 
 
-![png](README_files/README_17_0.png)
+![png](README_files/README_19_0.png)
 
 
 
@@ -271,7 +288,7 @@ jp.scatter(x='xc2', y='y', data=df, legend='xd', fit='smooth', fitparams={'s': 1
 
 
 
-![png](README_files/README_18_0.png)
+![png](README_files/README_20_0.png)
 
 
 
@@ -297,7 +314,7 @@ jp.contour(x='x', y='y', z='z', data=cdf, cmap='YlGnBu', figsize=(7,5), marker='
 
 
 
-![png](README_files/README_20_0.png)
+![png](README_files/README_22_0.png)
 
 
 
@@ -317,7 +334,7 @@ jp.grid(cols='Gz', data=cdf,
 
 
 
-![png](README_files/README_22_0.png)
+![png](README_files/README_24_0.png)
 
 
 
@@ -332,7 +349,7 @@ jp.grid(rows='Gx', cols='Gy', data=cdf,
 
 
 
-![png](README_files/README_23_0.png)
+![png](README_files/README_25_0.png)
 
 
 
@@ -347,7 +364,7 @@ jp.grid(cols='Gx', data=cdf,
 
 
 
-![png](README_files/README_24_0.png)
+![png](README_files/README_26_0.png)
 
 
 
@@ -368,7 +385,7 @@ jm.fit(model, data=df, sample_rate=.8, model_type='ols');
 ```
 
 
-![png](README_files/README_26_0.png)
+![png](README_files/README_28_0.png)
 
 
 ___
@@ -393,19 +410,19 @@ jm.fit(model, data=dfo, sample_rate=.8, model_type='ols');
 ```
 
 
-![png](README_files/README_30_0.png)
+![png](README_files/README_32_0.png)
 
 
 Employing the robust linear model, we can minimize the influence of the outliers, and get better coefficient predictions.
 
 
 ```python
-model = 'y ~ xc + xc2 + C(xd)'
+model = 'yout ~ xc + xc2 + C(xd)'
 jm.fit(model, data=dfo, sample_rate=.8, model_type='rlm');
 ```
 
 
-![png](README_files/README_32_0.png)
+![png](README_files/README_34_0.png)
 
 
 Our parameter estimates using the robust linear model are much closer to the truth, than using the OLS.
@@ -420,77 +437,7 @@ jm.check_estimates(model, data=df, sample_rate=.8, model_type='ols', iterations=
 ```
 
 
-![png](README_files/README_35_0.png)
-
-
-<a id='bayes'></a>
-### Bayesian Oneway Analysis
-
-
-```python
-samples = 1000
-cats = np.random.choice(('A', 'B', 'C'), size=samples)
-avgs = 1.05, 1.1, 1.25
-errs = 0.5, 0.5, 0.54
-outliers = np.random.choice((0, 2), p=(.95, .05), size=samples)
-
-vals = np.zeros(samples)
-for i, t in enumerate(('A', 'B', 'C')):
-    err = np.zeros(samples)
-    avg = np.zeros(samples)
-    err = err + np.random.normal(0, errs[i], size=samples)
-    avg = avg + avgs[i]
-    vals[cats == t] = avg[cats == t] + err[cats == t] + outliers[cats == t]
-    
-df = pd.DataFrame()
-df['Groups'] = cats
-df['Values'] = vals
-jp.boxplot('Groups', 'Values', df, legend='Groups')
-```
-
-
-
-
 ![png](README_files/README_37_0.png)
-
-
-
-The bayesian oneway analysis platform returns a result objects after specifying the parameters to be tested.
-If you have more than two groups, you need to specify the control group in order to appropriately compare the other groups.  This platform is built on pymc.
-
-
-```python
-res = jb.oneway('Groups', 'Values', df, control='A', iterations=24000, burn=4000, verbose=True)
-```
-
-     [-----------------100%-----------------] 24000 of 24000 complete in 11.6 sec
-
-
-```python
-res.result(boxkwargs={'alpha': 0.01, 'points': True}, maxpoints=5000)
-```
-
-
-
-
-![png](README_files/README_40_0.png)
-
-
-
-Get trace data from the simulation:
-
-
-```python
-for name in res.names:
-    res.traceplot(name)
-    break
-```
-
-    Plotting mean_A
-    
-
-
-![png](README_files/README_42_1.png)
 
 
 

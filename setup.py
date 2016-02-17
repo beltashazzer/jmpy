@@ -1,28 +1,25 @@
 from setuptools import setup
 
 setup(name='jmpy',
-      version='0.10.1',
-      description='Plotting and Modeling Package',
-      url='https://github.com/beltashazzer/jmpy',
-      download_url = 'https://github.com/beltashazzer/jmpy/tarball/0.1',
+      version='0.10.3',
+      description='JMP Style Plotting and Modeling',
+      url='',
       author='David Daycock',
-      author_email='daycock@gmail.com',
+      author_email='ddaycock@micron.com',
       license='MIT',
       packages=[
         'jmpy',
         'jmpy.common',
         'jmpy.plotting',
         'jmpy.modeling',
-        'jmpy.bayes'
         ],
-      package_data={'jmpy': ['*.html', '*.ipynb', '*.rst', '*.md']},
+      package_data={'jmpydev': ['*.html', '*.ipynb', '*.rst']},
       install_requires=[
           'pandas',
           'numpy',
           'matplotlib',
           'scipy',
           'patsy',
-          'statsmodels',
-          'pymc'
+          'statsmodels'
       ],
       zip_safe=True)
