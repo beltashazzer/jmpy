@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>jmpy.plotting.scatter &mdash; &#39;jmpy&#39; &#39;0.10&#39; documentation</title>
+    <title>jmpy.plotting.scatter &mdash; &#39;jmpy&#39; &#39;0.10.3&#39; documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '&#39;0.10&#39;',
+        VERSION:     '&#39;0.10.3&#39;',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="&#39;jmpy&#39; &#39;0.10&#39; documentation" href="../../../index.html" />
+    <link rel="top" title="&#39;jmpy&#39; &#39;0.10.3&#39; documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
   
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">&#39;jmpy&#39; &#39;0.10&#39; documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">&#39;jmpy&#39; &#39;0.10.3&#39; documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -95,7 +95,7 @@
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">legend</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span><span class="p">]]</span>
     <span class="c"># many of the fitting routines don&#39;t work with nan or non-sorted data.</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 
     <span class="c"># fit axis is for the regression equations</span>
@@ -222,7 +222,7 @@
         <span class="n">summ</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">)</span>
         <span class="n">summ</span> <span class="o">=</span> <span class="n">summ</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
         <span class="n">summ</span> <span class="o">=</span> <span class="n">summ</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-        <span class="n">summ</span> <span class="o">=</span> <span class="n">summ</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">summ</span> <span class="o">=</span> <span class="n">summ</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">summ</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">summ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>

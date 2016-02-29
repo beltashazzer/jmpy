@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>jmpy.common.colors &mdash; &#39;jmpy&#39; &#39;0.10&#39; documentation</title>
+    <title>jmpy.common.colors &mdash; &#39;jmpy&#39; &#39;0.10.3&#39; documentation</title>
     
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '&#39;0.10&#39;',
+        VERSION:     '&#39;0.10.3&#39;',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="&#39;jmpy&#39; &#39;0.10&#39; documentation" href="../../../index.html" />
+    <link rel="top" title="&#39;jmpy&#39; &#39;0.10.3&#39; documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
   
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">&#39;jmpy&#39; &#39;0.10&#39; documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">&#39;jmpy&#39; &#39;0.10.3&#39; documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -57,7 +57,16 @@
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
 
 
-<div class="viewcode-block" id="colormap"><a class="viewcode-back" href="../../../jmpy.common.html#jmpy.common.colors.colormap">[docs]</a><span class="k">def</span> <span class="nf">colormap</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s">&#39;discrete&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;default&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="colormap"><a class="viewcode-back" href="../../../jmpy.common.html#jmpy.common.colors.colormap">[docs]</a><span class="k">def</span> <span class="nf">colormap</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s">&#39;discrete&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;default&#39;</span><span class="p">,</span> <span class="n">color_dict</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;  Create a color map for series data</span>
+
+<span class="sd">    Params:</span>
+<span class="sd">    :param series: array of series data</span>
+<span class="sd">    :param kind: type of color map, no other kind implemented yet</span>
+<span class="sd">    :param cmap: specify your own color map</span>
+<span class="sd">    :param color_dict:  If true, returns a dictionary of series: colors, otherwise</span>
+<span class="sd">                        return an ndarray of colors for each row</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s">&#39;discrete&#39;</span> <span class="ow">and</span> <span class="n">cmap</span> <span class="o">!=</span> <span class="s">&#39;default&#39;</span><span class="p">:</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
 
@@ -69,6 +78,9 @@
         <span class="n">cc</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="o">.</span><span class="n">upper</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">rgb2hex</span><span class="p">(</span><span class="n">c</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">r</span><span class="p">]</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">c</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">sorted</span><span class="p">((</span><span class="nb">set</span><span class="p">(</span><span class="n">series</span><span class="p">))),</span> <span class="n">cc</span><span class="p">)}</span>
 
+        <span class="k">if</span> <span class="n">color_dict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">colors</span>
+
         <span class="c"># map the color grid to the series column</span>
         <span class="n">cgrid</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">colors</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">cgrid</span>
@@ -76,6 +88,10 @@
     <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s">&#39;discrete&#39;</span> <span class="ow">and</span> <span class="n">cmap</span> <span class="o">==</span> <span class="s">&#39;default&#39;</span><span class="p">:</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">c</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">sorted</span><span class="p">((</span><span class="nb">set</span><span class="p">(</span><span class="n">series</span><span class="p">))),</span> <span class="n">it</span><span class="o">.</span><span class="n">cycle</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">&#39;axes.color_cycle&#39;</span><span class="p">]))}</span>
         <span class="n">cgrid</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">colors</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">color_dict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">colors</span>
+
         <span class="k">return</span> <span class="n">cgrid</span>
 
     <span class="k">else</span><span class="p">:</span>

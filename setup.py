@@ -1,11 +1,11 @@
 from setuptools import setup
 
 setup(name='jmpy',
-      version='0.10.3',
+      version='0.10.4',
       description='JMP Style Plotting and Modeling',
       url='',
       author='David Daycock',
-      author_email='ddaycock@micron.com',
+      author_email='daycock@gmail.com',
       license='MIT',
       packages=[
         'jmpy',
@@ -13,7 +13,7 @@ setup(name='jmpy',
         'jmpy.plotting',
         'jmpy.modeling',
         ],
-      package_data={'jmpydev': ['*.html', '*.ipynb', '*.rst']},
+      package_data={'jmpy': ['*.html', '*.ipynb', '*.rst']},
       install_requires=[
           'pandas',
           'numpy',

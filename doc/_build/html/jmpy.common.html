@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>jmpy.common package &mdash; &#39;jmpy&#39; &#39;0.10&#39; documentation</title>
+    <title>jmpy.common package &mdash; &#39;jmpy&#39; &#39;0.10.3&#39; documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '&#39;0.10&#39;',
+        VERSION:     '&#39;0.10.3&#39;',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,10 +23,10 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="&#39;jmpy&#39; &#39;0.10&#39; documentation" href="index.html" />
+    <link rel="top" title="&#39;jmpy&#39; &#39;0.10.3&#39; documentation" href="index.html" />
     <link rel="up" title="jmpy package" href="jmpy.html" />
     <link rel="next" title="jmpy.modeling package" href="jmpy.modeling.html" />
-    <link rel="prev" title="jmpy.bayes package" href="jmpy.bayes.html" />
+    <link rel="prev" title="jmpy package" href="jmpy.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -46,9 +46,9 @@
           <a href="jmpy.modeling.html" title="jmpy.modeling package"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="jmpy.bayes.html" title="jmpy.bayes package"
+          <a href="jmpy.html" title="jmpy package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">&#39;jmpy&#39; &#39;0.10&#39; documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">&#39;jmpy&#39; &#39;0.10.3&#39; documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="jmpy.html" accesskey="U">jmpy package</a> &raquo;</li> 
       </ul>
     </div>  
@@ -67,8 +67,16 @@
 <span id="jmpy-common-colors-module"></span><h2>jmpy.common.colors module<a class="headerlink" href="#module-jmpy.common.colors" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="jmpy.common.colors.colormap">
-<code class="descclassname">jmpy.common.colors.</code><code class="descname">colormap</code><span class="sig-paren">(</span><em>series</em>, <em>kind='discrete'</em>, <em>cmap='default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/common/colors.html#colormap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.common.colors.colormap" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">jmpy.common.colors.</code><code class="descname">colormap</code><span class="sig-paren">(</span><em>series</em>, <em>kind='discrete'</em>, <em>cmap='default'</em>, <em>color_dict=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jmpy/common/colors.html#colormap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jmpy.common.colors.colormap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a color map for series data</p>
+<p>Params:
+:param series: array of series data
+:param kind: type of color map, no other kind implemented yet
+:param cmap: specify your own color map
+:param color_dict:  If true, returns a dictionary of series: colors, otherwise</p>
+<blockquote>
+<div>return an ndarray of colors for each row</div></blockquote>
+</dd></dl>
 
 </div>
 <div class="section" id="module-jmpy.common.stats">
@@ -125,8 +133,8 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="jmpy.bayes.html"
-                        title="previous chapter">jmpy.bayes package</a></p>
+  <p class="topless"><a href="jmpy.html"
+                        title="previous chapter">jmpy package</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="jmpy.modeling.html"
                         title="next chapter">jmpy.modeling package</a></p>
