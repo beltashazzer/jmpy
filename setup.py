@@ -3,7 +3,7 @@ from setuptools import setup
 setup(name='jmpy',
       version='0.10.4',
       description='JMP Style Plotting and Modeling',
-      url='',
+      url='https://github.com/beltashazzer/jmpy',
       author='David Daycock',
       author_email='daycock@gmail.com',
       license='MIT',
