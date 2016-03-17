@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jmpy.plotting.histogram &mdash; &#39;jmpy&#39; &#39;0.10.3&#39; documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '&#39;0.10.3&#39;',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="&#39;jmpy&#39; &#39;0.10.3&#39; documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">&#39;jmpy&#39; &#39;0.10.3&#39; documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for jmpy.plotting.histogram</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.backends.backend_agg</span> <span class="kn">as</span> <span class="nn">mbb</span>
+
+<span class="kn">from</span> <span class="nn">jmpy</span> <span class="kn">import</span> <span class="n">common</span>
+<span class="kn">from</span> <span class="nn">jmpy.plotting</span> <span class="kn">import</span> <span class="n">components</span>
+
+
+<div class="viewcode-block" id="histogram"><a class="viewcode-back" href="../../../jmpy.plotting.html#jmpy.plotting.histogram.histogram">[docs]</a><span class="k">def</span> <span class="nf">histogram</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+              <span class="n">xscale</span><span class="o">=</span><span class="s">&#39;linear&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s">&#39;linear&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;default&#39;</span><span class="p">,</span>
+              <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">cumprob</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+              <span class="n">table</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cgrid</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param x:  str or ndarray</span>
+<span class="sd">    :param data: is x is a str, this is a pd.Dataframe</span>
+<span class="sd">    :param legend: str or ndarray,</span>
+<span class="sd">    :param figsize: default is 9,6; sets the figure size</span>
+<span class="sd">    :param xscale: default is linear, set the scale type [linear, log, symlog]</span>
+<span class="sd">    :param yscale: default is linear, set the scale type [linear, log, symlog]</span>
+<span class="sd">    :param cmap: colormap to use for plotting</span>
+<span class="sd">    :param alpha: default is 0.5</span>
+<span class="sd">    :param cumprob: bool, determines if cumprob plot is displayed</span>
+<span class="sd">    :param marker: set matplotlib marker</span>
+<span class="sd">    :param bins: # of bins to use</span>
+<span class="sd">    :param table: bool, default is True, prints the datatable summary to the graph</span>
+<span class="sd">    :param kwargs:  passed to matplotlib hist function</span>
+<span class="sd">    :param fig: matplotlib figure instance for re-use...</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># if no dataframe is supplied, create one</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">create_df</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">legend</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+    <span class="n">min_</span><span class="p">,</span> <span class="n">max_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+    <span class="n">binlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">min_</span><span class="p">,</span> <span class="n">max_</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">fig</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">fig</span>
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">mbb</span><span class="o">.</span><span class="n">FigureCanvasAgg</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">axm</span><span class="p">,</span> <span class="n">axc</span><span class="p">,</span> <span class="n">axl</span><span class="p">,</span> <span class="n">axt</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">get_axes</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="n">axm</span> <span class="o">=</span> <span class="n">axes</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">mbb</span><span class="o">.</span><span class="n">FigureCanvasAgg</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">axm</span><span class="p">,</span> <span class="n">axc</span><span class="p">,</span> <span class="n">axl</span><span class="p">,</span> <span class="n">axt</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">create_axes</span><span class="p">(</span><span class="n">cumprob</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">table</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="n">axt</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">datatable</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">axt</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="n">legend</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">legend</span><span class="p">:</span>
+        <span class="c"># colormap is supposed to be the goto function to get all colormaps</span>
+        <span class="c"># should return a colorgrid that maps each point to a set of colors</span>
+        <span class="k">if</span> <span class="n">cgrid</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cgrid</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">colormap</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">legend</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s">&#39;discrete&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+
+        <span class="n">legend_color</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">legend</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">legend_color</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">cgrid</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">axes</span><span class="p">:</span>
+            <span class="n">axl</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">legend_color</span><span class="o">.</span><span class="n">items</span><span class="p">())),</span> <span class="n">axl</span><span class="p">)</span>
+            <span class="n">axl</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s">&#39;left&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">legend</span><span class="p">])):</span>
+            <span class="n">axm</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">legend</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">][</span><span class="n">x</span><span class="p">]),</span>
+                     <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+                     <span class="n">bins</span><span class="o">=</span><span class="n">binlist</span><span class="p">,</span>
+                     <span class="n">color</span><span class="o">=</span><span class="n">legend_color</span><span class="p">[</span><span class="n">group</span><span class="p">],</span>
+                     <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
+                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cumprob</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">axes</span><span class="p">:</span>
+                <span class="n">axc</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">cumprob</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">legend</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">][</span><span class="n">x</span><span class="p">],</span>
+                                         <span class="n">axc</span><span class="p">,</span>
+                                         <span class="n">color</span><span class="o">=</span><span class="n">legend_color</span><span class="p">[</span><span class="n">group</span><span class="p">],</span>
+                                         <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span>
+                                         <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axm</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]),</span>
+                 <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+                 <span class="n">bins</span><span class="o">=</span><span class="n">binlist</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cumprob</span><span class="p">:</span>
+            <span class="n">axc</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">cumprob</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">axc</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+
+    <span class="c"># various formating</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">min_</span><span class="p">,</span> <span class="n">max_</span><span class="p">)</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="n">xscale</span><span class="p">)</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">axm</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">():</span>
+        <span class="n">label</span><span class="o">.</span><span class="n">set_rotation</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cumprob</span><span class="p">:</span>
+        <span class="n">axc</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">min_</span><span class="p">,</span> <span class="n">max_</span><span class="p">)</span>
+        <span class="n">axc</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="n">xscale</span><span class="p">)</span>
+        <span class="n">axc</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([],</span> <span class="n">visible</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">axc</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">():</span>
+            <span class="n">label</span><span class="o">.</span><span class="n">set_rotation</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">axm</span>
+
+    <span class="k">return</span> <span class="n">canvas</span><span class="o">.</span><span class="n">figure</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, 'David.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

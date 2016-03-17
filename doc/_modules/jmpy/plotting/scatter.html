@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jmpy.plotting.scatter &mdash; &#39;jmpy&#39; &#39;0.10.3&#39; documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '&#39;0.10.3&#39;',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="&#39;jmpy&#39; &#39;0.10.3&#39; documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">&#39;jmpy&#39; &#39;0.10.3&#39; documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for jmpy.plotting.scatter</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">scipy.interpolate</span> <span class="kn">as</span> <span class="nn">spi</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.backends.backend_agg</span> <span class="kn">as</span> <span class="nn">mbb</span>
+
+<span class="kn">from</span> <span class="nn">jmpy</span> <span class="kn">import</span> <span class="n">common</span>
+<span class="kn">from</span> <span class="nn">jmpy.plotting</span> <span class="kn">import</span> <span class="n">components</span>
+
+
+<div class="viewcode-block" id="scatter"><a class="viewcode-back" href="../../../jmpy.plotting.html#jmpy.plotting.scatter.scatter">[docs]</a><span class="k">def</span> <span class="nf">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>  <span class="n">marker</span><span class="o">=</span><span class="s">&#39;o&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">xscale</span><span class="o">=</span><span class="s">&#39;linear&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s">&#39;linear&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;default&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+            <span class="n">fit</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fitparams</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cgrid</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Scatter plots with regression lines</span>
+<span class="sd">    :param x:  str or ndarray</span>
+<span class="sd">    :param y: str or ndarray</span>
+<span class="sd">    :param data: pandas.Dataframe</span>
+<span class="sd">    :param legend: str or ndarray, color/fit by this column</span>
+<span class="sd">    :param marker: matplotlib marker style</span>
+<span class="sd">    :param alpha: float, matplotlib alpha</span>
+<span class="sd">    :param xscale: default == linear, any of matplotlib scale types</span>
+<span class="sd">    :param yscale: default == linear, any of matplotlib scale types</span>
+<span class="sd">    :param cmap: any of matplotlib cmaps</span>
+<span class="sd">    :param figsize: default == (9,6);</span>
+<span class="sd">    :param fit: [linear, quadratic, smooth, interpolate]</span>
+<span class="sd">    :param fitparams: params to pass to fitting function</span>
+<span class="sd">    :param table:  show the regression table</span>
+<span class="sd">    :param kwargs:</span>
+<span class="sd">    :return: fig, (axes)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># if no dataframe is supplied, create one</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">create_df</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">legend</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fitparams</span><span class="p">:</span>
+        <span class="n">fitparams</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">legend</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span><span class="p">]]</span>
+    <span class="c"># many of the fitting routines don&#39;t work with nan or non-sorted data.</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="c"># fit axis is for the regression equations</span>
+    <span class="n">makefitaxis</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="n">fit</span> <span class="o">==</span> <span class="s">&#39;linear&#39;</span> <span class="ow">or</span> <span class="n">fit</span> <span class="o">==</span> <span class="s">&#39;quadratic&#39;</span><span class="p">:</span>
+        <span class="n">makefitaxis</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">if</span> <span class="n">fig</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">fig</span>
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">mbb</span><span class="o">.</span><span class="n">FigureCanvasAgg</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">axm</span><span class="p">,</span> <span class="n">axc</span><span class="p">,</span> <span class="n">axl</span><span class="p">,</span> <span class="n">axt</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">get_axes</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="n">axm</span> <span class="o">=</span> <span class="n">axes</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">mbb</span><span class="o">.</span><span class="n">FigureCanvasAgg</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">axm</span><span class="p">,</span> <span class="n">axc</span><span class="p">,</span> <span class="n">axl</span><span class="p">,</span> <span class="n">axt</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">create_axes</span><span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">table</span> <span class="ow">and</span> <span class="n">makefitaxis</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">legend</span><span class="p">:</span>
+        <span class="c"># colormap is supposed to be the goto function to get all colormaps</span>
+        <span class="c"># should return a colorgrid that maps each point to a set of colors</span>
+        <span class="k">if</span> <span class="n">cgrid</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cgrid</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">colormap</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">legend</span><span class="p">],</span>
+                                           <span class="n">kind</span><span class="o">=</span><span class="s">&#39;discrete&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+
+        <span class="n">legend_color</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">legend</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">legend_color</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">cgrid</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="c"># if the axis is supplied, we do not want to create a legend axis</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">axes</span><span class="p">:</span>
+            <span class="n">components</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">legend_color</span><span class="o">.</span><span class="n">items</span><span class="p">())),</span> <span class="n">axl</span><span class="p">)</span>
+            <span class="n">axl</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s">&#39;left&#39;</span><span class="p">)</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">legend</span><span class="p">])):</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">legend</span><span class="p">]</span> <span class="o">==</span> <span class="n">l</span><span class="p">]</span>
+            <span class="n">axm</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">legend_color</span><span class="p">[</span><span class="n">l</span><span class="p">],</span>
+                        <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">fit</span><span class="p">:</span>
+                <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">_get_fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">fit</span><span class="p">,</span> <span class="n">fitparams</span><span class="p">)</span>
+                <span class="n">axm</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">legend_color</span><span class="p">[</span><span class="n">l</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="n">makefitaxis</span> <span class="ow">and</span> <span class="n">table</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">+=</span> <span class="s">&#39;${}:  {}$</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">fn</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">makefitaxis</span> <span class="ow">and</span> <span class="n">table</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">axes</span><span class="p">:</span>
+            <span class="n">components</span><span class="o">.</span><span class="n">regressiontable</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">axt</span><span class="p">,</span> <span class="n">fig</span><span class="p">)</span>
+            <span class="n">axt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s">&#39;off&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axm</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">],</span>
+                    <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fit</span><span class="p">:</span>
+            <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">_get_fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">fit</span><span class="p">,</span> <span class="n">fitparams</span><span class="p">)</span>
+            <span class="n">axm</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">makefitaxis</span> <span class="ow">and</span> <span class="n">table</span><span class="p">:</span>
+                <span class="n">components</span><span class="o">.</span><span class="n">regressiontable</span><span class="p">(</span><span class="s">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fn</span><span class="p">),</span> <span class="n">axt</span><span class="p">,</span> <span class="n">fig</span><span class="p">)</span>
+
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]))</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">]))</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="n">xscale</span><span class="p">)</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">axm</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">axm</span>
+
+    <span class="k">return</span> <span class="n">canvas</span><span class="o">.</span><span class="n">figure</span>
+
+</div>
+<span class="k">def</span> <span class="nf">_get_fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">fit</span><span class="p">,</span> <span class="n">fitparams</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Internal method to return fitted data given an x and y and datatable</span>
+
+<span class="sd">    :param x: x param</span>
+<span class="sd">    :param y: y param</span>
+<span class="sd">    :param df: data table</span>
+<span class="sd">    :param fit: type of fit</span>
+<span class="sd">    :return: subsample of data and predicted line</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">xhat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">fit</span> <span class="o">==</span> <span class="s">&#39;linear&#39;</span><span class="p">:</span>
+        <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">_medianify</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">mb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">fitparams</span><span class="p">)</span>
+        <span class="n">fit_fn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">mb</span><span class="p">)</span>
+        <span class="c"># TODO: make this handle precision correctly</span>
+        <span class="n">eq</span> <span class="o">=</span> <span class="s">&#39;f(x) = {:.4f}x + {:.4f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">fit_fn</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fit_fn</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">xhat</span><span class="p">,</span> <span class="n">fit_fn</span><span class="p">(</span><span class="n">xhat</span><span class="p">),</span> <span class="n">eq</span>
+
+    <span class="k">elif</span> <span class="n">fit</span> <span class="o">==</span> <span class="s">&#39;quadratic&#39;</span><span class="p">:</span>
+        <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">_medianify</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">mb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">fitparams</span><span class="p">)</span>
+        <span class="n">fit_fn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">mb</span><span class="p">)</span>
+        <span class="c"># TODO: make this handle precision correctly...</span>
+        <span class="n">eq</span> <span class="o">=</span> <span class="s">&#39;f(x) = {:.4f}x^2 + {:.4f}x + {:.4f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">fit_fn</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fit_fn</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">fit_fn</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">xhat</span><span class="p">,</span> <span class="n">fit_fn</span><span class="p">(</span><span class="n">xhat</span><span class="p">),</span> <span class="n">eq</span>
+
+    <span class="k">elif</span> <span class="n">fit</span> <span class="o">==</span> <span class="s">&#39;smooth&#39;</span><span class="p">:</span>
+        <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">_medianify</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">xhat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">xs</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">spl</span> <span class="o">=</span> <span class="n">spi</span><span class="o">.</span><span class="n">UnivariateSpline</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">**</span><span class="n">fitparams</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xhat</span><span class="p">,</span> <span class="n">spl</span><span class="p">(</span><span class="n">xhat</span><span class="p">),</span> <span class="bp">None</span>
+
+    <span class="k">elif</span> <span class="n">fit</span> <span class="o">==</span> <span class="s">&#39;interpolate&#39;</span><span class="p">:</span>
+        <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">_medianify</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">spi</span><span class="o">.</span><span class="n">interp1d</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">**</span><span class="n">fitparams</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xhat</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">xhat</span><span class="p">),</span> <span class="bp">None</span>
+
+
+<span class="k">def</span> <span class="nf">_medianify</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]]</span>
+        <span class="c"># univariate spline chokes if there are multiple values per &quot;x&quot; so</span>
+        <span class="c"># we will take the median of all the doubled up x values.</span>
+        <span class="n">summ</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">)</span>
+        <span class="n">summ</span> <span class="o">=</span> <span class="n">summ</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
+        <span class="n">summ</span> <span class="o">=</span> <span class="n">summ</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">summ</span> <span class="o">=</span> <span class="n">summ</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">summ</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">summ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, 'David.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
