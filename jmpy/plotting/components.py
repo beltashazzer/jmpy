@@ -126,7 +126,6 @@ def create_axes(cumprob, legend, dt, fig):
 
     if dt:
         rows = 2
-        width_array = width_array + width_array
         height_array = [2, 1]
 
     grid = gs.GridSpec(rows, cols,
